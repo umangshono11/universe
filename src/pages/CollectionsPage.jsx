@@ -37,6 +37,7 @@ export const CollectionsPage = ({ onNavigate }) => {
 
         {/* Filter Pills */}
         <div 
+          className="collection-filter-pills"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -78,7 +79,7 @@ export const CollectionsPage = ({ onNavigate }) => {
         <div 
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
             gap: '2.5rem 2rem'
           }}
         >

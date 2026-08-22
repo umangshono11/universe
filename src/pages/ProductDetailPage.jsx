@@ -108,6 +108,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
       
       {/* Top Floating Header for PDP */}
       <div 
+        className="kdh-pdp-sticky-header"
         style={{
           position: 'sticky',
           top: 0,
@@ -170,6 +171,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
           {/* ================= LEFT COLUMN: MEDIA VIEWER & ZOOM ================= */}
           <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div 
+              className="kdh-pdp-image-stage"
               style={{
                 position: 'relative',
                 width: '100%',
@@ -467,6 +469,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
 
             {/* 3-Column Specifications Row */}
             <div 
+              className="pdp-specs-3col"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
@@ -520,8 +523,8 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
             </div>
 
             {/* Bottom Action CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem' }} className="pdp-actions-col">
+              <div className="pdp-cta-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
                 <button 
                   onClick={() => addToCart(product)}
                   style={{
