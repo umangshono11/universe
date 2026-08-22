@@ -11,174 +11,149 @@ export const Navbar = ({
   isAudioPlaying = false,
   onAudioToggle = () => {}
 }) => {
-  const { cartCount, setIsCartOpen } = useCart();
-
+  const { cartCount } = useCart();
   const isLightPage = currentPath !== '/' && !currentPath.startsWith('/productdetails');
+
+  /* ─── Shared icon button style ─────────────────────────── */
+  const iconBtnStyle = {
+    padding: '0.5rem',
+    borderRadius: '50%',
+    backgroundColor: isLightPage ? 'rgba(255,255,255,0.9)' : 'rgba(10,10,10,0.65)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: isLightPage
+      ? '1px solid rgba(45,76,58,0.25)'
+      : '1px solid rgba(255,255,255,0.2)',
+    color: isLightPage ? 'var(--ekkayi-forest)' : '#ffffff',
+    boxShadow: isLightPage
+      ? '0 4px 15px rgba(45,76,58,0.1)'
+      : '0 4px 15px rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'all 0.25s ease',
+    flexShrink: 0,
+  };
 
   return (
     <>
-      <nav 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          zIndex: 60,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '1.25rem 1.5rem',
-          pointerEvents: 'none'
-        }}
-      >
-        {/* Left: Burger Menu Button */}
-        <div style={{ pointerEvents: 'auto' }} className="flex items-center gap-4">
+      <nav className="ekkayi-navbar">
+
+        {/* ── Left: Hamburger ──────────────────────────────── */}
+        <div style={{ pointerEvents: 'auto', flexShrink: 0 }}>
           <button
+            id="nav-menu-toggle"
             onClick={onMenuToggle}
             className={`nav-menu-btn ${isMenuOpen ? 'open' : ''}`}
             aria-label="Toggle navigation menu"
-            title="Toggle Menu"
             style={isLightPage ? {
-              backgroundColor: 'rgba(255, 255, 255, 0.85)',
-              border: '1px solid rgba(45, 76, 58, 0.2)',
-              boxShadow: '0 4px 15px rgba(45, 76, 58, 0.08)'
-            } : {}}
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              border: '1px solid rgba(45,76,58,0.25)',
+              boxShadow: '0 4px 15px rgba(45,76,58,0.1)'
+            } : {
+              backgroundColor: 'rgba(10,10,10,0.65)',
+              border: '1px solid rgba(255,255,255,0.22)',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+            }}
           >
-            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : {}} />
-            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : {}} />
-            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : {}} />
+            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : { background: '#ffffff' }} />
+            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : { background: '#ffffff' }} />
+            <span style={isLightPage ? { background: 'var(--ekkayi-forest)' } : { background: '#ffffff' }} />
           </button>
         </div>
 
-        {/* Center: EKKAYI Brand Logo */}
-        <div 
-          style={{
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            pointerEvents: 'auto',
-            textAlign: 'center'
-          }}
-        >
+        {/* ── Center: Logo ─────────────────────────────────── */}
+        <div className="ekkayi-nav-logo-wrap" style={{ pointerEvents: 'auto' }}>
           <a
             href="/"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigate('/');
-            }}
-            className="inline-block transition-transform duration-300 hover:scale-105"
+            onClick={(e) => { e.preventDefault(); onNavigate('/'); }}
             aria-label="EKKAYI Home"
+            style={{ display: 'flex', alignItems: 'center' }}
           >
-            <img 
-              src={isLightPage ? "/ekkayi-nav-logo-green.svg" : "/ekkayi-nav-logo.svg"} 
-              alt="EKKAYI" 
+            {/* Mobile: icon-only mark */}
+            <img
+              src={isLightPage ? '/ekkayi-logo-green.svg' : '/ekkayi-logo.svg'}
+              alt="EKKAYI"
+              className="nav-logo-mobile"
               style={{
-                height: '38px',
-                width: 'auto',
-                maxWidth: '180px',
+                height: '34px',
+                width: '34px',
                 objectFit: 'contain',
-                filter: isLightPage ? 'none' : 'drop-shadow(0 2px 12px rgba(0,0,0,0.8))'
+                filter: isLightPage ? 'none' : 'drop-shadow(0 2px 10px rgba(0,0,0,0.9))'
+              }}
+            />
+            {/* Desktop: full wordmark */}
+            <img
+              src={isLightPage ? '/ekkayi-nav-logo-green.svg' : '/ekkayi-nav-logo.svg'}
+              alt="EKKAYI"
+              className="nav-logo-desktop"
+              style={{
+                height: '36px',
+                width: 'auto',
+                maxWidth: '170px',
+                objectFit: 'contain',
+                filter: isLightPage ? 'none' : 'drop-shadow(0 2px 12px rgba(0,0,0,0.85))'
               }}
             />
           </a>
         </div>
 
-        {/* Right: Sound, Search & Cart Controls */}
-        <div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            pointerEvents: 'auto'
-          }}
-        >
+        {/* ── Right: Sound + Search + Cart ─────────────────── */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          pointerEvents: 'auto',
+          flexShrink: 0,
+        }}>
           {/* Ambient Sound Toggle */}
           <button
+            id="nav-audio-toggle"
             onClick={onAudioToggle}
             style={{
-              padding: '0.55rem',
-              borderRadius: '50%',
-              backgroundColor: isLightPage ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(10px)',
-              border: isLightPage ? '1px solid rgba(45, 76, 58, 0.2)' : '1px solid rgba(255, 255, 255, 0.12)',
-              color: isAudioPlaying ? 'var(--gold)' : (isLightPage ? 'var(--ekkayi-forest)' : 'rgba(255, 255, 255, 0.75)'),
-              boxShadow: isLightPage ? '0 4px 15px rgba(45, 76, 58, 0.08)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
+              ...iconBtnStyle,
+              color: isAudioPlaying ? 'var(--gold)' : iconBtnStyle.color
             }}
-            className={isLightPage ? "hover:bg-[#2D4C3A] hover:text-white" : "hover:bg-black/80 hover:text-white"}
-            title={isAudioPlaying ? "Mute Ambient Sound" : "Play Ambient Sound"}
+            title={isAudioPlaying ? 'Mute Ambient Sound' : 'Play Ambient Sound'}
           >
-            {isAudioPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
+            {isAudioPlaying ? <Volume2 size={17} /> : <VolumeX size={17} />}
           </button>
 
-          {/* Search Trigger */}
+          {/* Search */}
           <button
+            id="nav-search-open"
             onClick={onSearchOpen}
-            style={{
-              padding: '0.55rem',
-              borderRadius: '50%',
-              backgroundColor: isLightPage ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(10px)',
-              border: isLightPage ? '1px solid rgba(45, 76, 58, 0.2)' : '1px solid rgba(255, 255, 255, 0.12)',
-              color: isLightPage ? 'var(--ekkayi-forest)' : '#ffffff',
-              boxShadow: isLightPage ? '0 4px 15px rgba(45, 76, 58, 0.08)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            className={isLightPage ? "hover:bg-[#2D4C3A] hover:text-white" : "hover:bg-black/80 hover:text-white"}
+            style={iconBtnStyle}
             title="Search Products & Collections"
           >
-            <Search size={18} />
+            <Search size={17} />
           </button>
 
-          {/* Shopping Cart Button with Count Badge */}
+          {/* Cart */}
           <button
+            id="nav-cart-btn"
             onClick={() => onNavigate('/cart')}
-            style={{
-              position: 'relative',
-              padding: '0.55rem',
-              borderRadius: '50%',
-              backgroundColor: isLightPage ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(10px)',
-              border: isLightPage ? '1px solid rgba(45, 76, 58, 0.2)' : '1px solid rgba(255, 255, 255, 0.12)',
-              color: isLightPage ? 'var(--ekkayi-forest)' : '#ffffff',
-              boxShadow: isLightPage ? '0 4px 15px rgba(45, 76, 58, 0.08)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            className={isLightPage ? "hover:bg-[#2D4C3A] hover:text-white" : "hover:bg-black/80 hover:text-white"}
+            style={{ ...iconBtnStyle, position: 'relative' }}
             title="View Cart"
           >
-            <ShoppingBag size={18} />
+            <ShoppingBag size={17} />
             {cartCount > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '-4px',
-                  right: '-4px',
-                  background: isLightPage ? 'var(--terracotta)' : 'var(--gold)',
-                  color: '#FFFFFF',
-                  fontSize: '0.65rem',
-                  fontWeight: '700',
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
-                }}
-              >
+              <span style={{
+                position: 'absolute',
+                top: '-3px',
+                right: '-3px',
+                background: isLightPage ? 'var(--terracotta)' : 'var(--gold)',
+                color: '#FFFFFF',
+                fontSize: '0.6rem',
+                fontWeight: '700',
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
                 {cartCount}
               </span>
             )}
