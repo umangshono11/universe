@@ -1,0 +1,76 @@
+<div style="position:fixed;inset:0;width:100vw;height:100vh;background:radial-gradient(circle at 50% 50%, rgba(45, 76, 58, 0.45) 0%, rgba(20, 36, 28, 0.65) 45%, #070908 85%);overflow:hidden;">
+  <div id="three-globe-mount" style="position:absolute;inset:0;width:100%;height:100%;"></div>
+  <div class="zoom-cinematic-overlay" id="zoom-overlay"></div>
+  
+  <!-- Live Tooltip -->
+  <div id="globe-tooltip" class="sphere-tooltip" style="position:fixed;pointer-events:none;z-index:100;display:none;background:rgba(18, 24, 21, 0.95);backdrop-filter:blur(16px);border:1px solid rgba(197, 167, 92, 0.4);border-radius:10px;padding:12px 18px;box-shadow:0 15px 35px rgba(0,0,0,0.85);">
+    <div style="font-size:0.68rem;color:var(--terracotta);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;" id="tt-group"></div>
+    <div style="font-family:var(--font-serif);font-size:1.15rem;font-weight:600;color:#FFFFFF;margin:3px 0;" id="tt-name"></div>
+    <div style="display:flex;align-items:center;gap:0.6rem;margin-top:4px;">
+      <span style="font-size:0.95rem;font-weight:700;color:var(--soft-parchment);" id="tt-price"></span>
+      <span style="font-size:0.68rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;background:rgba(197,167,92,0.15);padding:2px 8px;border-radius:10px;">Inspect Piece &rarr;</span>
+    </div>
+  </div>
+
+  <!-- Bottom Floating Instruction Pill -->
+  <div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:0.6rem;padding:8px 20px;border-radius:30px;background:rgba(18, 24, 21, 0.85);backdrop-filter:blur(16px);border:1px solid rgba(197, 167, 92, 0.35);box-shadow:0 8px 30px rgba(0,0,0,0.6);">
+      <span style="width:6px;height:6px;border-radius:50%;background:#C5A75C;display:inline-block;box-shadow:0 0 8px #C5A75C;"></span>
+      <span style="font-size:0.72rem;letter-spacing:0.2em;font-weight:600;color:var(--soft-parchment);text-transform:uppercase;">Drag to Rotate &bull; Click Any Piece to Inspect</span>
+    </div>
+  </div>
+
+  <!-- Orbit Controls (Bottom Right) -->
+  <div style="position:absolute;bottom:2rem;right:2rem;z-index:40;display:flex;flex-direction:column;gap:0.5rem;">
+    <button id="globe-zoom-in" style="width:38px;height:38px;border-radius:50%;background:rgba(18, 24, 21, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255, 255, 255, 0.2);color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Zoom In">+</button>
+    <button id="globe-zoom-out" style="width:38px;height:38px;border-radius:50%;background:rgba(18, 24, 21, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255, 255, 255, 0.2);color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Zoom Out">&minus;</button>
+    <button id="globe-rotate-toggle" style="width:38px;height:38px;border-radius:50%;background:rgba(18, 24, 21, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255, 255, 255, 0.2);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Pause / Auto-Rotate">&#10074;&#10074;</button>
+    <button id="globe-reset-view" style="width:38px;height:38px;border-radius:50%;background:rgba(18, 24, 21, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255, 255, 255, 0.2);color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Reset Orbit View">&#8635;</button>
+  </div>
+</div>
+
+{% comment %}Safely inject real furniture product data with fallback default products{% endcomment %}
+<script>
+{% assign shop_prods = collections.all.products %}
+{% assign valid_count = 0 %}
+{% for p in shop_prods %}
+  {% if p.featured_image != blank %}
+    {% assign valid_count = valid_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if valid_count > 0 %}
+window.KDH_PRODUCTS = [
+  {% for product in shop_prods %}
+  {% if product.featured_image != blank %}
+  {
+    "id": {{ product.id | json }},
+    "handle": {{ product.handle | json }},
+    "title": {{ product.title | json }},
+    "group": {{ product.product_type | default: 'Living Room' | json }},
+    "groupName": {{ product.product_type | default: 'Living Room' | json }},
+    "priceFormatted": {{ product.price | money | json }},
+    "image": {{ product.featured_image | image_url: width: 700 | json }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endif %}
+  {% endfor %}
+];
+{% else %}
+window.KDH_PRODUCTS = [
+  { "id": "1", "handle": "hazel-3-seater-sofa", "title": "Hazel Fabric 3 Seater Sofa", "group": "Living Room Sofas", "groupName": "Living Room", "priceFormatted": "₹34,900", "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "2", "handle": "hazel-2-seater-sofa", "title": "Hazel Fabric 2 Seater Loveseat", "group": "Living Room Sofas", "groupName": "Living Room", "priceFormatted": "₹27,900", "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "3", "handle": "valencia-l-shape-sectional-sofa", "title": "Valencia L-Shape Corner Sectional", "group": "Living Room Sofas", "groupName": "Living Room", "priceFormatted": "₹54,900", "image": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "4", "handle": "liora-3-seater-electric-recliner", "title": "Liora 3 Seater Electric Recliner", "group": "Living Room Sofas", "groupName": "Living Room", "priceFormatted": "₹74,900", "image": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "5", "handle": "aura-solid-teak-8-seater-dining-table", "title": "Aura Solid Teak 8 Seater Dining Table", "group": "Dining Sanctuaries", "groupName": "Dining", "priceFormatted": "₹48,900", "image": "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "6", "handle": "kyoto-handcrafted-cane-dining-chairs", "title": "Kyoto Cane & Teak Dining Chairs (Set of 6)", "group": "Dining Sanctuaries", "groupName": "Dining", "priceFormatted": "₹36,000", "image": "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "7", "handle": "hugo-nested-round-coffee-table-set", "title": "Hugo Nested Solid Wood Coffee Tables", "group": "Living Room Tables", "groupName": "Tables", "priceFormatted": "₹18,900", "image": "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "8", "handle": "terracotta-organic-center-table", "title": "Terracotta Hand-Molded Center Table", "group": "Living Room Tables", "groupName": "Tables", "priceFormatted": "₹24,500", "image": "https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "9", "handle": "sylvan-upholstered-king-bed", "title": "Sylvan Upholstered Platform Bed", "group": "Bedroom Sanctuaries", "groupName": "Bedroom", "priceFormatted": "₹62,000", "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "10", "handle": "max-solid-wood-hydraulic-storage-bed", "title": "Max Solid Wood Hydraulic Storage Bed", "group": "Bedroom Sanctuaries", "groupName": "Bedroom", "priceFormatted": "₹45,900", "image": "https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "11", "handle": "aurelia-modern-sideboard-credenza", "title": "Aurelia Modern Sideboard Credenza", "group": "Storage & Credenzas", "groupName": "Storage", "priceFormatted": "₹46,000", "image": "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1000&q=80" },
+  { "id": "12", "handle": "kyoto-solid-oak-accent-armchair", "title": "Kyoto Solid Oak & Bouclé Armchair", "group": "Accent Chairs", "groupName": "Chairs", "priceFormatted": "₹22,900", "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80" }
+];
+{% endif %}
+window.KDH_BASE_URL = {{ routes.root_url | json }};
+</script>
+<script src="{{ 'kdh-three-globe.js' | asset_url }}" defer></script>

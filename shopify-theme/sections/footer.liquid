@@ -1,0 +1,46 @@
+<footer style="background:#09090b;border-top:1px solid rgba(255,255,255,0.08);padding:4rem 0 2.5rem;">
+  <div class="kdh-container">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:3rem;">
+      <div>
+        <img src="{{ 'ekkayi-logo.svg' | asset_url }}" alt="EKKAYI" style="width:140px;margin-bottom:1.25rem;">
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:240px;">Architecture • Functional Art<br>Mumbai | Chicago | Washington D.C.</p>
+        <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);transition:color 0.2s" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.9);margin-bottom:1.25rem;font-weight:600;">Collections</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.6rem;">
+          <li><a href="/collections" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Living Room Sofas</a></li>
+          <li><a href="/collections" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Dining Sets & Chairs</a></li>
+          <li><a href="/collections" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Bedroom Sanctuaries</a></li>
+          <li><a href="/collections" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">All Furniture Collections</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.9);margin-bottom:1.25rem;font-weight:600;">Studio</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.6rem;">
+          <li><a href="/pages/about" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">About EKKAYI</a></li>
+          <li><a href="/pages/press" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Press & Awards</a></li>
+          <li><a href="/pages/contact" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Contact Atelier</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.9);margin-bottom:1.25rem;font-weight:600;">Contact</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.6rem;">
+          <li><a href="/pages/contact" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Enquire</a></li>
+          <li><a href="mailto:studio@ekkayi.com" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">studio@ekkayi.com</a></li>
+          <li><a href="https://wa.me/919820123456" target="_blank" rel="noopener" style="font-size:0.8rem;color:rgba(255,255,255,0.5);">WhatsApp Studio</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:1.5rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.08em;">&copy; {{ 'now' | date: '%Y' }} EKKAYI. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.06em;">Architecture • Functional Art • Collectible Design</p>
+    </div>
+  </div>
+</footer>
+{% schema %}{"name":"Footer","settings":[]}{% endschema %}
+

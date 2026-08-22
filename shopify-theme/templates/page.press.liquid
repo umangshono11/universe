@@ -1,0 +1,56 @@
+<div style="min-height:100vh;background:linear-gradient(180deg, #F0E8DD 0%, #F8F5EE 40%, #EAE0CD 100%);color:#0A0A0A;padding-top:6.5rem;padding-bottom:6rem;">
+  <div class="kdh-container">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <h1 style="font-family:var(--font-serif);font-size:clamp(2.2rem, 4vw, 3.2rem);font-weight:500;color:var(--ekkayi-forest);letter-spacing:0.06em;text-transform:uppercase;display:inline-block;padding-bottom:0.75rem;border-bottom:2px solid var(--terracotta);">Press &amp; Recognition</h1>
+      <p style="color:#4A504C;font-size:1rem;margin-top:1rem;letter-spacing:0.02em;max-width:680px;margin-inline:auto;line-height:1.7;">Critical acclaim and editorial features celebrating EKKAYI's architectural furniture and interior sanctuaries.</p>
+    </div>
+
+    <!-- Editorial Cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2.5rem 2rem;margin-bottom:5rem;">
+      {% assign press = "Architectural Digest|January 2025|Editorial Feature|EKKAYI's Organic Living Suites Redefine Contemporary Indian Craftsmanship|https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80|https://www.architecturaldigest.in,Elle Decor International|November 2024|Design Spotlight|The Tactile Warmth of Solid Teak: Inside EKKAYI's Sanctuary Philosophy|https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80|https://www.elledecor.com,Vogue Living|October 2024|Interior Profile|Balancing Organic Forms and Minimalist Discipline in Modern Urban Spaces|https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80|https://www.vogue.in" | split: "," %}
+      {% for item in press %}
+        {% assign pp = item | split: "|" %}
+        <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;box-shadow:0 10px 30px rgba(45,76,58,0.06);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;transition:all 0.3s ease;" class="press-card">
+          <div>
+            <div style="height:210px;overflow:hidden;background:#F0E8DD;">
+              <img src="{{ pp[4] }}" alt="{{ pp[3] }}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;">
+            </div>
+            <div style="padding:1.75rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+                <span style="font-size:0.72rem;color:var(--terracotta);letter-spacing:0.14em;text-transform:uppercase;font-weight:700;">{{ pp[0] }}</span>
+                <span style="font-size:0.7rem;color:#7A807C;">{{ pp[1] }}</span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.2rem;font-weight:600;color:var(--ekkayi-forest);line-height:1.4;letter-spacing:0.02em;margin-bottom:0.75rem;">{{ pp[3] }}</h3>
+            </div>
+          </div>
+          <div style="padding:0 1.75rem 1.75rem;">
+            <a href="{{ pp[5] }}" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ekkayi-forest);text-decoration:none;display:inline-flex;align-items:center;gap:4px;">Read Feature &rarr;</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Awards -->
+    <div style="max-width:900px;margin:0 auto;background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;padding:2.5rem;box-shadow:0 12px 35px rgba(45,76,58,0.08);">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <h2 style="font-family:var(--font-serif);font-size:1.75rem;font-weight:600;color:var(--ekkayi-forest);letter-spacing:0.06em;text-transform:uppercase;">Design Honors &amp; Accolades</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        {% assign awards = "2025|Best Artisanal Living Room Collection|Architectural Digest AD100|Hazel & Valencia Series,2024|Excellence in Sustainable Solid Wood Craftsmanship|India Design Forum (IDF)|Aura Teak Dining Series,2023|Innovative Ergonomic Furniture Design|Elle Decor Design Awards (EDIDA)|Liora Electric Motion Recliner" | split: "," %}
+        {% for award in awards %}
+          {% assign ap = award | split: "|" %}
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:linear-gradient(135deg, #F0E8DD 0%, #F5EFE6 100%);border-radius:8px;border:1px solid rgba(45,76,58,0.12);flex-wrap:wrap;gap:0.75rem;">
+            <div>
+              <strong style="color:var(--ekkayi-forest);font-size:0.92rem;">{{ ap[1] }}</strong>
+              <p style="color:#555A56;font-size:0.76rem;margin-top:2px;">{{ ap[2] }} &bull; {{ ap[3] }}</p>
+            </div>
+            <span style="font-size:0.8rem;color:var(--ekkayi-forest);font-weight:700;letter-spacing:0.1em;">{{ ap[0] }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.press-card:hover{transform:translateY(-4px);border-color:var(--ekkayi-forest);box-shadow:0 15px 35px rgba(45,76,58,0.12);}
+</style>

@@ -1,0 +1,24 @@
+<div class="sidebar-menu-drawer" id="sidebar-drawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+  <div>
+    <img src="{{ 'ekkayi-logo.svg' | asset_url }}" alt="EKKAYI" style="width:130px;margin-bottom:2.5rem;opacity:0.85;">
+    <nav aria-label="Site navigation">
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+        {% assign nav_items = 'Home,/|Collections,/collections|About,/pages/about|Press & Awards,/pages/press|Contact,/pages/contact' | split: '|' %}
+        {% for item in nav_items %}
+          {% assign parts = item | split: ',' %}
+          <li style="border-bottom:1px solid rgba(255,255,255,0.06);">
+            <a href="{{ parts[1] }}" class="sidebar-nav-link" style="display:block;padding:1rem 0;font-size:1.1rem;font-weight:300;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.85);transition:color 0.2s,padding-left 0.2s;">{{ parts[0] }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+  <div>
+    <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;">Architecture • Functional Art</p>
+    <p style="font-size:0.65rem;color:rgba(255,255,255,0.2);margin-top:0.5rem;">&copy; {{ 'now' | date: '%Y' }} EKKAYI</p>
+  </div>
+</div>
+<style>
+.sidebar-nav-link:hover{color:#c5a75c !important;padding-left:0.5rem !important;}
+</style>
+

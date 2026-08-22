@@ -1,0 +1,31 @@
+﻿<div class="kdh-modal-backdrop" id="catalogue-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Download Catalogue">
+  <div class="kdh-modal-card" style="max-width:480px;text-align:center;">
+    <button id="catalogue-close" aria-label="Close" style="position:absolute;top:1rem;right:1rem;color:rgba(255,255,255,0.5);font-size:1.4rem;background:none;border:none;cursor:pointer;">&#x2715;</button>
+    <div style="margin-bottom:1.5rem;">
+      <div style="width:48px;height:48px;background:rgba(197,167,92,0.15);border:1px solid rgba(197,167,92,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c5a75c" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </div>
+      <h2 style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Download Catalogue</h2>
+      <p id="catalogue-collection-name" style="font-size:0.8rem;color:#c5a75c;letter-spacing:0.08em;"></p>
+      <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Enter your details to receive the specification catalogue.</p>
+    </div>
+    <form id="catalogue-form" style="text-align:left;">
+      <input type="hidden" id="catalogue-pdf-url" value="">
+      <div style="display:grid;gap:0.875rem;margin-bottom:1.25rem;">
+        <div>
+          <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Name *</label>
+          <input type="text" id="cat-name" required placeholder="Your full name" class="kdh-input">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Email *</label>
+          <input type="email" id="cat-email" required placeholder="you@example.com" class="kdh-input">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Phone</label>
+          <input type="tel" id="cat-phone" placeholder="+91 XXXXX XXXXX" class="kdh-input">
+        </div>
+      </div>
+      <button type="submit" class="btn-gold" style="width:100%;justify-content:center;">Download PDF Catalogue</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,186 @@
+{% assign dimensions = product.metafields.kdh.dimensions | default: 'W 210cm x D 95cm x H 85cm' %}
+{% assign lead_time = product.metafields.kdh.lead_time | default: 'Ready to Dispatch / 2-3 Weeks' %}
+{% assign primary_material = product.metafields.kdh.material | default: 'Solid Hardwood & Premium Upholstery' %}
+{% assign images = product.images %}
+
+<div style="min-height:100vh;background:linear-gradient(180deg, #F0E8DD 0%, #F8F5EE 40%, #EAE0CD 100%);color:#0A0A0A;position:relative;">
+  <!-- PDP Sticky Header -->
+  <div style="position:sticky;top:0;left:0;width:100%;height:4.5rem;background:rgba(240, 232, 221, 0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:80;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid rgba(45,76,58,0.12);">
+    <a href="/collections" style="color:var(--ekkayi-forest);text-decoration:none;display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;" aria-label="Collections">
+      &larr; Collections
+    </a>
+    <div style="position:absolute;left:50%;transform:translateX(-50%);">
+      <a href="{{ routes.root_url }}"><img src="{{ 'ekkayi-nav-logo-green.svg' | asset_url }}" alt="EKKAYI" style="height:36px;width:auto;cursor:pointer;"></a>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.25rem;">
+      <a href="{{ routes.cart_url }}" style="background:none;border:none;color:var(--ekkayi-forest);cursor:pointer;padding:4px;position:relative;" aria-label="Cart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count-badge" id="pdp-cart-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--terracotta);color:#FFF;font-size:0.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;">{{ cart.item_count }}</span>
+      </a>
+      <a href="{{ routes.root_url }}" style="color:var(--ekkayi-forest);cursor:pointer;padding:4px;display:flex;align-items:center;" title="Return to Home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="kdh-container" style="padding-top:2.5rem;padding-bottom:5rem;">
+    <div class="kdh-pdp-grid" style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:4rem;align-items:start;min-height:75vh;">
+
+      <!-- LEFT: Gallery & Media Stage -->
+      <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+        <div style="position:relative;width:100%;height:68vh;max-height:650px;background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;box-shadow:0 12px 35px rgba(45,76,58,0.08);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <!-- All Photos -->
+          <button id="pdp-grid-btn" style="position:absolute;top:1rem;left:1rem;background:rgba(240,232,221,0.85);border:1px solid rgba(45,76,58,0.2);color:var(--ekkayi-forest);cursor:pointer;padding:8px;border-radius:8px;z-index:10;" title="All Photos">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+          </button>
+          <!-- Fullscreen -->
+          <button id="pdp-fs-btn" style="position:absolute;top:1rem;right:1rem;background:rgba(240,232,221,0.85);border:1px solid rgba(45,76,58,0.2);color:var(--ekkayi-forest);cursor:pointer;padding:8px;border-radius:8px;z-index:10;" title="Fullscreen">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+          <!-- Main Zoom Stage -->
+          <div id="pdp-zoom-stage" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:zoom-in;">
+            {% if product.featured_image != blank %}
+              <img id="pdp-main-img" src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title }}"
+                   style="max-width:92%;max-height:92%;object-fit:contain;transition:transform 0.22s ease-out;transform-origin:center center;">
+            {% endif %}
+          </div>
+          <!-- Arrows -->
+          <button id="pdp-prev" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);font-size:2rem;font-weight:200;color:var(--ekkayi-forest);background:#FFFFFF;border:1px solid rgba(45,76,58,0.2);border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.08);" aria-label="Previous image">&#8249;</button>
+          <button id="pdp-next" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);font-size:2rem;font-weight:200;color:var(--ekkayi-forest);background:#FFFFFF;border:1px solid rgba(45,76,58,0.2);border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.08);" aria-label="Next image">&#8250;</button>
+          <!-- Counter -->
+          <div id="pdp-counter" style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);font-size:0.75rem;letter-spacing:0.15em;color:var(--ekkayi-forest);background:rgba(240,232,221,0.9);padding:3px 12px;border-radius:20px;font-weight:700;text-transform:uppercase;">1 / {% if images.size > 0 %}{{ images.size }}{% else %}1{% endif %}</div>
+        </div>
+
+        <!-- Thumbnails -->
+        {% if images.size > 1 %}
+        <div style="display:flex;gap:0.75rem;margin-top:1rem;overflow-x:auto;padding-bottom:0.25rem;max-width:100%;" id="pdp-thumbs">
+          {% for image in images %}
+            <img src="{{ image | image_url: width: 140 }}" alt="{{ product.title }} {{ forloop.index }}"
+                 class="pdp-thumb {% if forloop.first %}active{% endif %}"
+                 data-index="{{ forloop.index0 }}"
+                 data-src="{{ image | image_url: width: 1200 }}"
+                 style="width:70px;height:70px;object-fit:cover;border:2px solid {% if forloop.first %}var(--ekkayi-forest){% else %}rgba(45,76,58,0.2){% endif %};border-radius:8px;cursor:pointer;flex-shrink:0;background:#FFF;padding:2px;transition:border-color 0.2s;">
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- RIGHT: Product Info & Commerce -->
+      <div style="display:flex;flex-direction:column;gap:1.75rem;background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;padding:2.5rem;box-shadow:0 12px 35px rgba(45,76,58,0.08);">
+        <div>
+          <span style="font-size:0.72rem;color:var(--terracotta);letter-spacing:0.16em;text-transform:uppercase;font-weight:700;">EKKAYI ARTISANAL LIVING</span>
+          <h1 style="font-family:var(--font-serif);font-size:clamp(1.9rem,3vw,2.5rem);font-weight:600;letter-spacing:0.02em;color:var(--ekkayi-forest);line-height:1.2;margin:0.4rem 0 0.75rem;">{{ product.title }}</h1>
+          
+          <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:0.5rem;">
+            <span style="font-size:1.6rem;font-weight:700;color:var(--charred-black);">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span style="font-size:1.05rem;color:#8A8D8B;text-decoration:line-through;">{{ product.compare_at_price | money }}</span>
+              <span style="font-size:0.75rem;background:rgba(172,102,68,0.12);color:var(--terracotta);padding:3px 8px;border-radius:4px;font-weight:700;">SAVE {{ product.compare_at_price | minus: product.price | money }}</span>
+            {% endif %}
+          </div>
+          <span style="font-size:0.74rem;color:#7A807C;">Inclusive of all taxes • Free delivery across India</span>
+        </div>
+
+        <!-- 3-Column Specifications Grid -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;border-top:1px solid rgba(45,76,58,0.12);border-bottom:1px solid rgba(45,76,58,0.12);padding:1.25rem 0;">
+          <div>
+            <span style="font-size:0.7rem;color:var(--terracotta);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;display:block;">Dimension</span>
+            <button id="dims-modal-btn" style="background:none;border:none;padding:0;font-size:0.85rem;color:var(--ekkayi-forest);text-decoration:underline;cursor:pointer;font-weight:600;text-align:left;">View Specs</button>
+          </div>
+          <div>
+            <span style="font-size:0.7rem;color:var(--terracotta);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;display:block;">Lead Time</span>
+            <span style="font-size:0.85rem;color:#1A1A1A;font-weight:600;">{{ lead_time }}</span>
+          </div>
+          <div>
+            <span style="font-size:0.7rem;color:var(--terracotta);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;display:block;">Composition</span>
+            <span style="font-size:0.85rem;color:#1A1A1A;font-weight:600;">{{ primary_material }}</span>
+          </div>
+        </div>
+
+        <!-- Description Narrative -->
+        <div style="font-size:0.9rem;color:#4A504C;line-height:1.75;">
+          {% if product.description != blank %}
+            {{ product.description }}
+          {% else %}
+            <p>Handcrafted by master artisans with high-resilience ergonomic cushioning, kiln-dried structural solid wood, and stain-resistant luxury upholstery.</p>
+          {% endif %}
+        </div>
+
+        <!-- Primary Action Buttons -->
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <form action="/cart/add" method="post" id="pdp-atc-form">
+            <input type="hidden" name="id" id="pdp-variant-id" value="{{ product.selected_or_first_available_variant.id | default: 1 }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn-primary" id="pdp-atc-btn" style="width:100%;padding:1rem;background:var(--ekkayi-forest);color:#FFFFFF;border:none;border-radius:8px;font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px rgba(45,76,58,0.25);">
+              Add to Cart
+            </button>
+          </form>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <button class="open-enquire" data-product="{{ product.title }}" data-variant="" style="padding:0.85rem;background:#FFFFFF;border:1px solid var(--ekkayi-forest);color:var(--ekkayi-forest);border-radius:8px;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">
+              Custom Request
+            </button>
+            <a href="https://wa.me/919820123456?text=Hi%20EKKAYI,%20I%20am%20interested%20in%20{{ product.title | url_encode }}" target="_blank" rel="noopener noreferrer" style="padding:0.85rem;background:#F0E8DD;border:1px solid rgba(45,76,58,0.2);color:var(--ekkayi-forest);border-radius:8px;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+              WhatsApp Atelier
+            </a>
+          </div>
+        </div>
+
+        <!-- Trust Assurance Badges -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;border-top:1px solid rgba(45,76,58,0.1);padding-top:1.25rem;text-align:center;">
+          <div style="font-size:0.72rem;color:#4A504C;font-weight:600;">
+            <span style="display:block;font-size:1.1rem;margin-bottom:2px;">🚚</span>
+            Free Delivery
+          </div>
+          <div style="font-size:0.72rem;color:#4A504C;font-weight:600;">
+            <span style="display:block;font-size:1.1rem;margin-bottom:2px;">🛡️</span>
+            3-Yr Warranty
+          </div>
+          <div style="font-size:0.72rem;color:#4A504C;font-weight:600;">
+            <span style="display:block;font-size:1.1rem;margin-bottom:2px;">🔧</span>
+            Free Assembly
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimensions Modal -->
+  <div id="dims-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,10,0.8);backdrop-filter:blur(12px);z-index:150;align-items:center;justify-content:center;padding:2rem;">
+    <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.2);border-radius:16px;max-width:520px;width:100%;padding:2.5rem;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(45,76,58,0.12);padding-bottom:1rem;margin-bottom:1.5rem;">
+        <h3 style="font-family:var(--font-serif);font-size:1.3rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ekkayi-forest);">Architectural Dimensions</h3>
+        <button id="dims-close" style="background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer;">&#x2715;</button>
+      </div>
+      <p style="font-family:var(--font-serif);font-size:1.25rem;font-weight:600;color:var(--ekkayi-forest);margin-bottom:0.4rem;">{{ product.title }}</p>
+      <p style="font-size:1rem;color:var(--terracotta);font-weight:700;margin-bottom:1.5rem;">{{ dimensions }}</p>
+      <p style="font-size:0.85rem;color:#555A56;line-height:1.7;">Manufactured according to European ergonomics standards. Custom dimension adjustments available upon request through our Atelier team.</p>
+    </div>
+  </div>
+
+  <!-- Fullscreen Lightbox -->
+  <div id="pdp-lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:300;align-items:center;justify-content:center;">
+    <button id="pdp-lb-close" style="position:absolute;top:1.5rem;right:1.5rem;font-size:1.6rem;color:#FFF;background:none;border:none;cursor:pointer;">&#x2715;</button>
+    <button id="pdp-lb-prev" style="position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);font-size:3rem;color:#FFF;background:none;border:none;cursor:pointer;">&#8249;</button>
+    <button id="pdp-lb-next" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:3rem;color:#FFF;background:none;border:none;cursor:pointer;">&#8250;</button>
+    <img id="pdp-lb-img" src="" alt="{{ product.title }}" style="max-width:90vw;max-height:90vh;object-fit:contain;">
+  </div>
+</div>
+
+<style>
+@media(max-width:900px){.kdh-pdp-grid{grid-template-columns:1fr !important;}}
+#dims-modal.open{display:flex !important;}
+#pdp-lightbox.open{display:flex !important;}
+</style>
+
+<script>
+window.KDH_PDP_IMAGES = [
+  {% if images.size > 0 %}
+    {% for image in images %}"{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}{% endfor %}
+  {% else %}
+    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80"
+  {% endif %}
+];
+window.KDH_PDP_TOTAL = {% if images.size > 0 %}{{ images.size }}{% else %}1{% endif %};
+</script>

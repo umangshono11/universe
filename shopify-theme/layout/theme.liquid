@@ -1,0 +1,78 @@
+﻿<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="{{ page_description | default: 'Discover award-winning architectural and interior designs by EKKAYI.' }}">
+  <title>{% if page_title == blank %}EKKAYI{% else %}{{ page_title }} | EKKAYI{% endif %}</title>
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="icon" type="image/png" href="{{ 'ekkayi-logo.svg' | asset_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Outfit:wght@200;300;400;500;600;700;800&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'animations.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+
+  {% if template == 'index' %}
+  <style>
+    #kdh-loader{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1);}
+    #kdh-loader.fading{opacity:0;pointer-events:none;}
+    #kdh-loader-glow{position:absolute;width:450px;height:450px;border-radius:50%;background:radial-gradient(circle,rgba(197,167,92,0.12) 0%,rgba(0,0,0,0) 70%);pointer-events:none;}
+    #kdh-loader-pct{font-size:3.5rem;font-weight:200;color:rgba(255,255,255,0.85);font-family:'Outfit',sans-serif;letter-spacing:0.08em;margin-bottom:1rem;position:relative;z-index:1;}
+    #kdh-loader-brand{text-align:center;max-width:320px;position:relative;z-index:1;}
+    #kdh-loader-logo{width:180px;margin:0 auto 0.75rem;display:block;}
+    #kdh-loader-track{width:180px;height:1px;background:rgba(255,255,255,0.1);margin:0.75rem auto;}
+    #kdh-loader-fill{height:1px;background:#c5a75c;width:0%;transition:width 0.1s linear;}
+    #kdh-loader-tag{color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:0.24em;text-transform:uppercase;font-family:'Outfit',sans-serif;}
+    #kdh-loader-skip{position:absolute;bottom:2.5rem;color:rgba(255,255,255,0.4);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:2px;cursor:pointer;font-family:'Outfit',sans-serif;}
+  </style>
+  {% endif %}
+</head>
+<body>
+  {% if template == 'index' %}
+  <div id="kdh-loader">
+    <div id="kdh-loader-glow"></div>
+    <div id="kdh-loader-pct">0%</div>
+    <div id="kdh-loader-brand">
+      <img id="kdh-loader-logo" src="{{ 'ekkayi-logo.svg' | asset_url }}" alt="EKKAYI">
+      <div id="kdh-loader-track"><div id="kdh-loader-fill"></div></div>
+      <p id="kdh-loader-tag">Architecture • Functional Art</p>
+    </div>
+    <button id="kdh-loader-skip">Skip Intro</button>
+  </div>
+  {% endif %}
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  {% render 'sidebar-menu' %}
+  {% render 'search-modal' %}
+  {% render 'enquire-modal' %}
+  {% render 'catalogue-modal' %}
+
+  {% comment %}Only render global header on non-PDP pages (PDP has its own dedicated top bar){% endcomment %}
+  {% unless template == 'product' %}
+    {% section 'header' %}
+  {% endunless %}
+
+  <main id="MainContent" role="main">{{ content_for_layout }}</main>
+
+  {% unless template == 'index' or template == 'product' %}
+    {% section 'footer' %}
+  {% endunless %}
+
+  <script src="{{ 'kdh-theme.js' | asset_url }}" defer></script>
+
+  {% if template == 'index' %}
+  <script>
+  (function(){
+    var el=document.getElementById('kdh-loader'),pct=document.getElementById('kdh-loader-pct'),fill=document.getElementById('kdh-loader-fill'),skip=document.getElementById('kdh-loader-skip'),start=Date.now(),dur=1600,done=false;
+    if(!el) return;
+    function dismiss(){if(done)return;done=true;el.classList.add('fading');setTimeout(function(){document.body.dispatchEvent(new CustomEvent('kdh:loader-done'));setTimeout(function(){el.style.display='none';},50);},780);}
+    var iv=setInterval(function(){var p=Math.min(100,Math.floor((Date.now()-start)/dur*100));if(pct)pct.textContent=p+'%';if(fill)fill.style.width=p+'%';if(p>=100){clearInterval(iv);setTimeout(dismiss,200);}},20);
+    if(skip) skip.addEventListener('click',function(){clearInterval(iv);dismiss();});
+  })();
+  </script>
+  {% endif %}
+</body>
+</html>
+

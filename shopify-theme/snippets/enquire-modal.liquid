@@ -1,0 +1,51 @@
+﻿<div class="kdh-modal-backdrop" id="enquire-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Enquire">
+  <div class="kdh-modal-card" style="max-width:560px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:1.25rem;margin-bottom:1.5rem;">
+      <div>
+        <h2 style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;">Enquire About This Piece</h2>
+        <p id="enquire-product-name" style="font-size:0.8rem;color:#c5a75c;margin-top:0.25rem;letter-spacing:0.06em;"></p>
+      </div>
+      <button id="enquire-close" aria-label="Close enquiry modal" style="color:rgba(255,255,255,0.5);font-size:1.4rem;line-height:1;background:none;border:none;cursor:pointer;">&#x2715;</button>
+    </div>
+    {% form 'contact', id: 'enquire-form' %}
+      <input type="hidden" name="contact[subject]" id="enquire-subject" value="Product Enquiry">
+      <input type="hidden" name="contact[product]" id="enquire-product-hidden" value="">
+      <input type="hidden" name="contact[variant]" id="enquire-variant-hidden" value="">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Name *</label>
+          <input type="text" name="contact[name]" required placeholder="Your name" class="kdh-input">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Phone *</label>
+          <input type="tel" name="contact[phone]" required placeholder="+91 XXXXX XXXXX" class="kdh-input">
+        </div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Email *</label>
+        <input type="email" name="contact[email]" required placeholder="you@example.com" class="kdh-input">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Project Type</label>
+        <select name="contact[project_type]" class="kdh-input">
+          <option>Residential Interior</option>
+          <option>Commercial / Hospitality</option>
+          <option>Bespoke Commission</option>
+          <option>Architecture Project</option>
+          <option>International Project</option>
+        </select>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <label style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-bottom:0.4rem;">Message</label>
+        <textarea name="contact[body]" rows="3" placeholder="Tell us about your project..." class="kdh-input" style="resize:vertical;"></textarea>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Send Enquiry</button>
+    {% endform %}
+  </div>
+</div>
+<style>
+.kdh-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.7rem 0.875rem;font-size:0.875rem;font-family:'Outfit',sans-serif;outline:none;border-radius:4px;transition:border-color 0.2s;}
+.kdh-input:focus{border-color:rgba(197,167,92,0.5);}
+.kdh-input::placeholder{color:rgba(255,255,255,0.3);}
+select.kdh-input option{background:#111114;color:#fff;}
+</style>

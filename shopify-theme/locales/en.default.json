@@ -1,0 +1,9 @@
+﻿{
+  "general": {
+    "password": "Password",
+    "search": "Search",
+    "cart": "Cart",
+    "menu": "Menu",
+    "close": "Close"
+  }
+}

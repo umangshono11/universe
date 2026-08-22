@@ -1,0 +1,91 @@
+<div style="min-height:100vh;background:linear-gradient(180deg, #F0E8DD 0%, #F8F5EE 40%, #EAE0CD 100%);color:#0A0A0A;padding-top:6.5rem;padding-bottom:6rem;">
+  <div class="kdh-container">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <h1 style="font-family:var(--font-serif);font-size:clamp(2.2rem, 4vw, 3.2rem);font-weight:500;color:var(--ekkayi-forest);letter-spacing:0.06em;text-transform:uppercase;display:inline-block;padding-bottom:0.75rem;border-bottom:2px solid var(--terracotta);">Contact the Atelier</h1>
+      <p style="color:#4A504C;font-size:1rem;margin-top:1rem;letter-spacing:0.02em;max-width:680px;margin-inline:auto;line-height:1.7;">Initiate conversations for bespoke furniture commissions, interior residential projects, or trade inquiries.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:3.5rem;max-width:1050px;margin:0 auto;" class="contact-grid">
+      <!-- Left Column: Studio Details -->
+      <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;padding:2.5rem;box-shadow:0 10px 30px rgba(45,76,58,0.06);display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <img src="{{ 'ekkayi-nav-logo-green.svg' | asset_url }}" alt="EKKAYI" style="height:32px;width:auto;margin-bottom:1.5rem;">
+          
+          <div style="margin-bottom:1.75rem;">
+            <h3 style="font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracotta);font-weight:700;margin-bottom:0.4rem;">Atelier Studio</h3>
+            <p style="font-size:0.9rem;color:#4A504C;line-height:1.6;">EKKAYI Design Studio &amp; Workshop<br>Bandra West, Mumbai 400050, India</p>
+          </div>
+
+          <div style="margin-bottom:1.75rem;">
+            <h3 style="font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracotta);font-weight:700;margin-bottom:0.4rem;">Direct Line</h3>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <a href="mailto:studio@ekkayi.com" style="color:var(--ekkayi-forest);font-size:0.9rem;text-decoration:none;font-weight:600;">&#9993; studio@ekkayi.com</a>
+              <a href="https://wa.me/919820123456" target="_blank" rel="noopener noreferrer" style="color:var(--ekkayi-forest);font-size:0.9rem;text-decoration:none;font-weight:600;">&#128241; +91 98201 23456 (WhatsApp Atelier)</a>
+            </div>
+          </div>
+
+          <div style="margin-bottom:1.75rem;">
+            <h3 style="font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracotta);font-weight:700;margin-bottom:0.4rem;">Consultation Hours</h3>
+            <p style="font-size:0.88rem;color:#4A504C;">Monday – Saturday: 10:00 AM – 7:30 PM IST</p>
+          </div>
+        </div>
+
+        <div style="border-left:3px solid var(--terracotta);padding-left:1.25rem;background:#F0E8DD;padding:1rem 1.25rem;border-radius:0 8px 8px 0;">
+          <p style="font-size:0.82rem;color:var(--ekkayi-forest);line-height:1.6;font-style:italic;">
+            "We engineer living spaces that inspire serenity, warmth, and lifelong material connection."
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Column: Form -->
+      <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;padding:2.5rem;box-shadow:0 10px 30px rgba(45,76,58,0.06);">
+        {% form 'contact', id: 'contact-form' %}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">Your Name *</label>
+              <input type="text" name="contact[name]" required placeholder="Aarav Sharma" style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">Email Address *</label>
+              <input type="email" name="contact[email]" required placeholder="aarav@domain.com" style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">Contact Number</label>
+              <input type="tel" name="contact[phone]" placeholder="+91 98000 00000" style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">City / State</label>
+              <input type="text" name="contact[city]" placeholder="Mumbai, Bengaluru..." style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;">
+            </div>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">Inquiry Category</label>
+            <select name="contact[inquiry_type]" style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;">
+              <option>Living Room Sofas &amp; Seating</option>
+              <option>Dining Sanctuary Sets</option>
+              <option>Bedroom Suites &amp; Platform Beds</option>
+              <option>Custom Architectural Commission</option>
+              <option>Interior Designer &amp; Trade Partnership</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:1.5rem;">
+            <label style="display:block;font-size:0.75rem;font-weight:700;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;">Message &amp; Project Details *</label>
+            <textarea name="contact[body]" rows="5" required placeholder="Tell us about the space, required dimensions, and preferred wood/fabric finishes..." style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;resize:vertical;"></textarea>
+          </div>
+
+          <button type="submit" style="width:100%;padding:1rem;background:var(--ekkayi-forest);color:#FFFFFF;border:none;border-radius:6px;font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px rgba(45,76,58,0.25);">
+            Send Atelier Request
+          </button>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+@media(max-width:850px){.contact-grid{grid-template-columns:1fr !important;}}
+</style>

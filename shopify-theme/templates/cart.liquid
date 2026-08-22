@@ -1,0 +1,77 @@
+<div style="min-height:100vh;background:linear-gradient(180deg, #F0E8DD 0%, #F8F5EE 40%, #EAE0CD 100%);color:#0A0A0A;padding-top:6.5rem;padding-bottom:6rem;">
+  <div class="kdh-container" style="max-width:960px;">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <h1 style="font-family:var(--font-serif);font-size:clamp(2.2rem, 4vw, 3rem);font-weight:500;color:var(--ekkayi-forest);letter-spacing:0.06em;text-transform:uppercase;display:inline-block;padding-bottom:0.75rem;border-bottom:2px solid var(--terracotta);">Your Cart</h1>
+    </div>
+
+    {% if cart.item_count == 0 %}
+      <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;box-shadow:0 10px 30px rgba(45,76,58,0.06);text-align:center;padding:5rem 2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(45,76,58,0.3)" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <p style="font-size:1.1rem;color:var(--ekkayi-forest);margin-top:1.5rem;letter-spacing:0.04em;font-weight:600;">Your furniture cart is currently empty.</p>
+        <p style="font-size:0.88rem;color:#666;margin-top:0.4rem;">Discover our handcrafted living room, dining, and bedroom sanctuaries.</p>
+        <a href="/collections" style="margin-top:2rem;display:inline-flex;padding:0.9rem 1.75rem;background:var(--ekkayi-forest);color:#FFFFFF;border-radius:6px;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">Browse Furniture Collections</a>
+      </div>
+    {% else %}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+        <div style="background:#FFFFFF;border:1px solid rgba(45,76,58,0.15);border-radius:16px;box-shadow:0 10px 30px rgba(45,76,58,0.06);padding:2.5rem;margin-bottom:2rem;">
+          <!-- Line Items -->
+          <div style="display:flex;flex-direction:column;gap:0;margin-bottom:2.5rem;">
+            {% for item in cart.items %}
+            <div style="display:grid;grid-template-columns:110px 1fr auto;gap:1.5rem;align-items:center;padding:1.5rem 0;border-bottom:1px solid rgba(45,76,58,0.1);">
+              <a href="{{ item.url }}">
+                {% if item.image != blank %}
+                  <img src="{{ item.image | image_url: width: 220 }}" alt="{{ item.title }}" style="width:100%;height:100px;object-fit:cover;background:#F0E8DD;border-radius:8px;border:1px solid rgba(45,76,58,0.15);">
+                {% else %}
+                  <div style="width:100%;height:100px;background:#F0E8DD;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ekkayi-forest);font-size:0.75rem;font-weight:700;">EKKAYI</div>
+                {% endif %}
+              </a>
+              <div>
+                <a href="{{ item.url }}" style="font-family:var(--font-serif);font-size:1.15rem;font-weight:600;color:var(--ekkayi-forest);letter-spacing:0.02em;text-decoration:none;">{{ item.product_title }}</a>
+                {% if item.variant_title != blank and item.variant_title != 'Default Title' %}
+                  <p style="font-size:0.8rem;color:var(--terracotta);margin-top:0.25rem;font-weight:600;">{{ item.variant_title }}</p>
+                {% endif %}
+                <p style="font-size:0.75rem;color:#7A807C;margin-top:0.25rem;">{{ item.product.type | default: 'Artisanal Furniture' }}</p>
+                <!-- Quantity Controls -->
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.75rem;">
+                  <span style="font-size:0.72rem;color:#555;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Quantity:</span>
+                  <div style="display:flex;align-items:center;border:1px solid rgba(45,76,58,0.25);border-radius:4px;overflow:hidden;background:#FBF8F4;">
+                    <button type="button" class="qty-btn" data-line="{{ forloop.index }}" data-delta="-1" style="width:32px;height:32px;background:none;border:none;color:var(--ekkayi-forest);cursor:pointer;font-size:1.1rem;font-weight:700;">&#8722;</button>
+                    <span class="qty-display" style="min-width:36px;text-align:center;font-size:0.9rem;color:#0A0A0A;font-weight:600;">{{ item.quantity }}</span>
+                    <button type="button" class="qty-btn" data-line="{{ forloop.index }}" data-delta="1" style="width:32px;height:32px;background:none;border:none;color:var(--ekkayi-forest);cursor:pointer;font-size:1.1rem;font-weight:700;">&#43;</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;">
+                <span style="font-size:1.15rem;font-weight:700;color:var(--charred-black);">{{ item.line_price | money }}</span>
+                <a href="/cart/change?line={{ forloop.index }}&quantity=0" class="cart-remove-btn" style="font-size:0.72rem;color:var(--terracotta);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;font-weight:700;border-bottom:1px solid rgba(172,102,68,0.3);padding-bottom:1px;">Remove Piece</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Order Notes -->
+          <div style="margin-bottom:2rem;">
+            <label style="font-size:0.75rem;color:var(--ekkayi-forest);letter-spacing:0.08em;text-transform:uppercase;display:block;margin-bottom:0.4rem;font-weight:700;">Special Instructions / Customization Notes</label>
+            <textarea name="note" rows="3" placeholder="Floor level, lift availability, preferred wood finishes, or custom dimensions..." style="width:100%;padding:0.75rem 1rem;border:1px solid rgba(45,76,58,0.25);border-radius:6px;font-size:0.9rem;background:#FBF8F4;color:#0A0A0A;resize:vertical;">{{ cart.note }}</textarea>
+          </div>
+
+          <!-- Summary Box -->
+          <div style="background:#F0E8DD;border:1px solid rgba(45,76,58,0.15);border-radius:12px;padding:1.75rem;max-width:420px;margin-left:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+              <span style="font-size:0.9rem;color:#4A504C;font-weight:500;">Subtotal ({{ cart.item_count }} item{% if cart.item_count > 1 %}s{% endif %})</span>
+              <span style="font-size:1.25rem;color:var(--charred-black);font-weight:700;">{{ cart.total_price | money }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;font-size:0.8rem;color:#666;">
+              <span>Pan-India Shipping</span>
+              <span style="color:var(--ekkayi-forest);font-weight:700;">FREE</span>
+            </div>
+            <button type="submit" name="checkout" style="width:100%;padding:1rem;background:var(--ekkayi-forest);color:#FFFFFF;border:none;border-radius:6px;font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px rgba(45,76,58,0.25);">
+              Proceed to Checkout
+            </button>
+            <p style="font-size:0.72rem;color:#7A807C;text-align:center;margin-top:0.75rem;">Taxes included • 100% Secure Checkout</p>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</div>
