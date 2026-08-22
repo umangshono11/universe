@@ -628,19 +628,21 @@ export const ThreeSphereGallery = ({ onNavigate }) => {
       <div 
         style={{
           position: 'absolute',
-          bottom: '2rem',
+          bottom: '1.5rem',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 30,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          width: 'max-content',
+          maxWidth: 'calc(100vw - 7rem)'
         }}
       >
         <div 
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.6rem',
-            padding: '8px 20px',
+            gap: '0.5rem',
+            padding: '7px 14px',
             borderRadius: '30px',
             background: 'rgba(18, 24, 21, 0.85)',
             backdropFilter: 'blur(16px)',
@@ -648,18 +650,20 @@ export const ThreeSphereGallery = ({ onNavigate }) => {
             boxShadow: '0 8px 30px rgba(0,0,0,0.6)'
           }}
         >
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C5A75C', display: 'inline-block', boxShadow: '0 0 8px #C5A75C' }} />
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C5A75C', display: 'inline-block', boxShadow: '0 0 8px #C5A75C', flexShrink: 0 }} />
           <span style={{
-            fontSize: '0.72rem',
-            letterSpacing: '0.2em',
+            fontSize: '0.68rem',
+            letterSpacing: '0.14em',
             fontWeight: '600',
             color: 'var(--soft-parchment)',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap'
           }}>
-            Drag to Rotate • Click Any Piece to Inspect
+            Drag · Click to Inspect
           </span>
         </div>
       </div>
     </div>
   );
 };
+

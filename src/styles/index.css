@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    EKKAYI - ARTISANAL LUXURY DESIGN SYSTEM
    Brand Earthy Palette:
    - Charred Black: #0A0A0A
@@ -377,39 +377,174 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =====================================================================
-   RESPONSIVE SYSTEM — Full mobile-first breakpoints
+   RESPONSIVE SYSTEM â€” Mobile-first, comprehensive
+   All layout-controlling properties MUST be here (not inline styles)
    ===================================================================== */
 
-/* PDP Two-Column Grid — mobile stacked, desktop side-by-side */
+/* â”€â”€ PDP Layout Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Mobile: single column, image first then info */
 .kdh-pdp-responsive-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
 }
 
+/* Desktop: two-column side by side */
 @media (min-width: 900px) {
   .kdh-pdp-responsive-grid {
     grid-template-columns: 1.15fr 0.85fr;
     gap: 4rem;
+    align-items: center;
+    min-height: 75vh;
   }
 }
 
-/* Navbar: reduce logo + icon sizes on small screens */
+/* â”€â”€ PDP Image Stage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.kdh-pdp-image-stage {
+  position: relative;
+  width: 100%;
+  /* Mobile: 70vw height, capped at 320px */
+  height: min(70vw, 320px);
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(45, 76, 58, 0.15);
+  box-shadow: 0 16px 45px rgba(45, 76, 58, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@media (min-width: 600px) {
+  .kdh-pdp-image-stage {
+    height: min(65vw, 480px);
+    border-radius: 16px;
+  }
+}
+
+@media (min-width: 900px) {
+  .kdh-pdp-image-stage {
+    height: min(70vh, 640px);
+  }
+}
+
+/* â”€â”€ PDP Sticky Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.kdh-pdp-sticky-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3.5rem;
+  background: rgba(240, 232, 221, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(45, 76, 58, 0.15);
+}
+
+.kdh-pdp-sticky-header img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 640px) {
+  .kdh-pdp-sticky-header {
+    height: 4.5rem;
+    padding: 0 2rem;
+  }
+  .kdh-pdp-sticky-header img {
+    height: 38px;
+  }
+}
+
+/* â”€â”€ PDP container top padding â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 640px) {
+  .kdh-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* â”€â”€ PDP 3-col specs: 2-col on small mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 480px) {
-  nav img[alt="EKKAYI"] {
-    height: 28px !important;
-    max-width: 130px !important;
-  }
-  nav {
-    padding: 0.85rem 1rem !important;
-  }
-  /* Reduce nav icon button sizes */
-  nav button {
-    padding: 0.4rem !important;
+  .pdp-specs-3col {
+    grid-template-columns: 1fr 1fr !important;
   }
 }
 
-/* Sidebar menu drawer — always full-width on very small screens */
+/* â”€â”€ PDP CTA buttons: full-width stack on small mobile â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 480px) {
+  .pdp-cta-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* â”€â”€ Navbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.nav-menu-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.nav-menu-btn:hover {
+  background: rgba(45, 76, 58, 0.6);
+  border-color: var(--gold);
+}
+
+.nav-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.nav-menu-btn.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-menu-btn.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-menu-btn.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 480px) {
+  nav {
+    padding: 0.75rem 1rem !important;
+  }
+  nav img[alt="EKKAYI"] {
+    height: 26px !important;
+    max-width: 120px !important;
+  }
+  nav button:not(.nav-menu-btn) {
+    padding: 0.35rem !important;
+  }
+}
+
+/* â”€â”€ Sidebar Menu Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sidebar-menu-drawer {
   position: fixed;
   top: 0;
@@ -459,180 +594,81 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Nav burger / hamburger button */
-.nav-menu-btn {
+/* â”€â”€ Collections Filter Pills â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.collection-filter-pills {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 40px;
-  height: 40px;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 0;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all 0.25s ease;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
 }
 
-.nav-menu-btn:hover {
-  background: rgba(45, 76, 58, 0.6);
-  border-color: var(--gold);
-}
-
-.nav-menu-btn span {
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: #ffffff;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.nav-menu-btn.open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.nav-menu-btn.open span:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-}
-.nav-menu-btn.open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-/* =====================================================================
-   COLLECTIONS PAGE — responsive grid
-   ===================================================================== */
-@media (max-width: 600px) {
-  /* Filter pills — allow scrolling on xs */
+@media (max-width: 640px) {
   .collection-filter-pills {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
-    padding-bottom: 0.5rem;
+    padding: 0.25rem 0 0.75rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    gap: 0.5rem;
   }
   .collection-filter-pills::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* =====================================================================
-   PDP IMAGE VIEWER — mobile height reduction
-   ===================================================================== */
-@media (max-width: 768px) {
-  .kdh-pdp-image-stage {
-    height: 55vw !important;
-    max-height: 400px !important;
-  }
-  
-  /* PDP header padding */
-  .kdh-container {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  /* PDP sticky header reduce height */
-  .kdh-pdp-sticky-header {
-    height: 3.75rem !important;
-    padding: 0 1rem !important;
-  }
-  .kdh-pdp-sticky-header img {
-    height: 28px !important;
+  .collection-filter-pills button {
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 }
 
-/* =====================================================================
-   ABOUT PAGE — banner height reduction on mobile
-   ===================================================================== */
-@media (max-width: 640px) {
-  .about-banner {
-    height: 220px !important;
-  }
-  .about-banner-overlay-text {
-    left: 1.25rem !important;
-    gap: 0.85rem !important;
-  }
-  .about-banner-overlay-text h2 {
-    font-size: 1.6rem !important;
-  }
-  .about-content {
-    padding: 2rem 1.25rem !important;
+/* â”€â”€ Collections card grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 480px) {
+  .collections-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem 0 !important;
   }
 }
 
-/* =====================================================================
-   FOOTER — responsive layout
-   ===================================================================== */
+/* â”€â”€ Section headers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 480px) {
+  .section-header {
+    padding-top: 4rem;
+    padding-bottom: 1.5rem;
+  }
+  .section-title {
+    font-size: 1.75rem;
+    min-width: unset;
+  }
+}
+
+/* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 767px) {
   .footer-inner {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    text-align: center;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 2rem !important;
   }
   .footer-inner > div {
     text-align: center !important;
   }
   .footer-copyright {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.5rem !important;
   }
 }
 
-/* =====================================================================
-   THREE.JS SPHERE CANVAS — always full viewport
-   ===================================================================== */
-canvas {
-  display: block;
-  touch-action: none;
-}
-
-/* =====================================================================
-   SECTION HEADER — mobile adjustments
-   ===================================================================== */
-@media (max-width: 480px) {
-  .section-header {
-    padding-top: 4.5rem;
-    padding-bottom: 1.5rem;
-  }
-  .section-title {
-    font-size: 1.8rem;
-    min-width: unset;
-  }
-}
-
-/* =====================================================================
-   CART PAGE — responsive table/list
-   ===================================================================== */
+/* â”€â”€ About Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 640px) {
-  .cart-item-row {
-    flex-direction: column;
-    gap: 0.85rem;
+  .about-banner {
+    height: 200px !important;
   }
 }
 
-/* =====================================================================
-   ENQUIRE & CATALOGUE MODALS — full-width on mobile
-   ===================================================================== */
-@media (max-width: 540px) {
-  .ekkayi-modal-box {
-    width: 96vw !important;
-    padding: 1.5rem !important;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-}
-
-/* =====================================================================
-   CONTACT / PRESS PAGE — single column on mobile
-   ===================================================================== */
+/* â”€â”€ Contact / Press Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 768px) {
   .contact-grid-2col {
     grid-template-columns: 1fr !important;
@@ -642,21 +678,23 @@ canvas {
   }
 }
 
-/* =====================================================================
-   PRODUCT DETAIL — Action CTAs full-width on small screens
-   ===================================================================== */
-@media (max-width: 480px) {
-  .pdp-cta-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .pdp-specs-3col {
-    grid-template-columns: 1fr 1fr !important;
+/* â”€â”€ Modals â€” full-width on mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 540px) {
+  .ekkayi-modal-box {
+    width: 96vw !important;
+    padding: 1.5rem !important;
+    max-height: 90dvh;
+    overflow-y: auto;
   }
 }
 
-/* =====================================================================
-   UTILITY — prevent content overflow
-   ===================================================================== */
+/* â”€â”€ Globe Canvas â€” full viewport â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* â”€â”€ Global safeguards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 img {
   max-width: 100%;
   height: auto;
@@ -666,3 +704,10 @@ img {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* â”€â”€ Page Wrappers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.page-parchment-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #F0E8DD 0%, #F5EFE6 50%, #ECE3D4 100%);
+  color: var(--charred-black);
+  position: relative;
+}

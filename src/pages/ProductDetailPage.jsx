@@ -158,35 +158,10 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
       </div>
 
       <div className="kdh-container" style={{ paddingTop: '2.5rem', paddingBottom: '6rem' }}>
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.15fr 0.85fr',
-            gap: '4rem',
-            alignItems: 'center',
-            minHeight: '75vh'
-          }}
-          className="kdh-pdp-responsive-grid"
-        >
+        <div className="kdh-pdp-responsive-grid">
           {/* ================= LEFT COLUMN: MEDIA VIEWER & ZOOM ================= */}
           <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div 
-              className="kdh-pdp-image-stage"
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '70vh',
-                maxHeight: '640px',
-                background: '#FFFFFF',
-                borderRadius: '16px',
-                border: '1px solid rgba(45, 76, 58, 0.15)',
-                boxShadow: '0 16px 45px rgba(45, 76, 58, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden'
-              }}
-            >
+            <div className="kdh-pdp-image-stage">
               {/* Top-Left: 3x3 All Photos Modal Icon */}
               <button
                 onClick={() => setIsMediaGridOpen(true)}
