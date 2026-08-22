@@ -911,3 +911,88 @@ img {
     position: static;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ABOUT PAGE & FOOTER — Pixel Perfect Responsive CSS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Hero Section */
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 850px) {
+  .about-hero-grid {
+    grid-template-columns: 1fr 1.25fr;
+    gap: 3.5rem;
+  }
+}
+
+/* Brand Story Card */
+.about-brand-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+@media (min-width: 850px) {
+  .about-brand-grid {
+    grid-template-columns: 240px 1fr;
+    gap: 0;
+    align-items: center;
+  }
+  .about-brand-grid > div:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .about-brand-grid > div:last-child {
+    padding-left: 2.5rem;
+  }
+}
+
+@media (max-width: 849px) {
+  .about-brand-grid > div:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 1.75rem;
+    padding-right: 0 !important;
+  }
+}
+
+/* Craftsman Quote Card */
+.about-quote-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 850px) {
+  .about-quote-grid {
+    grid-template-columns: 1fr 1.35fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
+
+/* Footer Grid */
+.ekkayi-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 580px) {
+  .ekkayi-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .ekkayi-footer-grid {
+    grid-template-columns: 1.5fr repeat(4, 1fr) 1.1fr;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+}
