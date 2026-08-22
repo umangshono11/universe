@@ -996,3 +996,37 @@ img {
     align-items: flex-start;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   PDP NEW SECTIONS — Responsive Grids
+   ══════════════════════════════════════════════════════════════ */
+
+/* Why You'll Love It Section */
+.pdp-love-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 900px) {
+  .pdp-love-grid {
+    grid-template-columns: 1fr 2.7fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
+
+/* Specifications + Bespoke Customization Section */
+.pdp-specs-custom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 850px) {
+  .pdp-specs-custom-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+}

@@ -21,6 +21,41 @@ export const FABRIC_SWATCHES = [
 export const PRODUCTS = [
   // =================== 1. LIVING ROOM SOFAS & RECLINERS ===================
   {
+    _id: { $oid: "ekkayi-liora-3s-recliner" },
+    id: "liora-3-seater-electric-recliner-sofa",
+    title: "Liora 3 Seater Electric Recliner Sofa",
+    group: "sofas",
+    groupName: "Living Room Sofas",
+    price: 74900,
+    priceFormatted: "₹74,900",
+    originalPrice: "₹109,990",
+    discount: "32% OFF",
+    rating: 4.8,
+    reviewsCount: 126,
+    material: "Ultra-Soft Suede Fabric & Kiln-Dried Hardwood",
+    leadTime: "12 - 15 Days",
+    warranty: "3 Years",
+    seatingCapacity: "3 SEATER (DUAL POWER RECLINER)",
+    dimensions: "W 198 x D 95 x H 102 cm",
+    upholstery: "Ultra-Soft Suede Fabric",
+    foamType: "High Resilience Foam",
+    frameMaterial: "Kiln-Dried Hardwood",
+    reclinerMechanism: "Dual Motorized",
+    usbPorts: "2 Fast-Charging Ports",
+    care: "Easy to Clean",
+    description: `Cinema-grade luxury in your living room. The Liora 3-Seater Electric Recliner features dual whisper-quiet motorized mechanisms with integrated USB fast-charging ports.
+
+Multi-tier padded headrests and overstuffed armrests offer zero-gravity pressure relief, upholstered in stain-resistant velvet suede fabric.`,
+    images: [
+      { filePath: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Main View" },
+      { filePath: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Living Room Angle" },
+      { filePath: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Front View" },
+      { filePath: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Cushion Detail" },
+      { filePath: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Side Profile" },
+      { filePath: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80", fileName: "Liora Sanctuary Context" }
+    ]
+  },
+  {
     _id: { $oid: "ekkayi-hazel-3s" },
     id: "hazel-3-seater-sofa",
     title: "Hazel Fabric 3 Seater Sofa",
