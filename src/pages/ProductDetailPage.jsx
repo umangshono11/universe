@@ -1,16 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getProductById, PRODUCTS } from '../data/products';
 import { useCart } from '../context/CartContext';
-import { 
-  X, 
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  Tag,
-  Check
-} from 'lucide-react';
+import { X, Minus, Plus, ChevronRight, ChevronLeft, Maximize2, Grid } from 'lucide-react';
 import { EnquireModal } from '../components/EnquireModal';
 import { MediaGridModal } from '../components/MediaGridModal';
+
+/* ─── Feature Strip data ─────────────────────────────────── */
+const FEATURES = [
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+    ),
+    title: 'Premium Craftsmanship',
+    sub: 'Handcrafted by skilled artisans',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    title: 'Sustainable Materials',
+    sub: 'Responsibly sourced wood',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+      </svg>
+    ),
+    title: 'Customizable Options',
+    sub: 'Fabric, color & configuration',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 14a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3.18h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.81a2 2 0 0 1-.45 2.11L7.91 10.9a16 16 0 0 0 6.13 6.13l1.19-1.19a2 2 0 0 1 2.11-.45c.91.33 1.85.56 2.81.69A2 2 0 0 1 22 17v-.08z"/>
+      </svg>
+    ),
+    title: 'Dedicated Support',
+    sub: 'Design experts at your service',
+  },
+];
+
+const TRUST_BADGES = [
+  { icon: '🔒', title: 'Secure Payments', sub: '100% safe & encrypted' },
+  { icon: '↩️', title: 'Easy Returns', sub: '30-day return policy' },
+  { icon: '🎧', title: 'Live Support', sub: 'Mon – Sat (10AM – 7PM)' },
+  { icon: '⭐', title: 'Trust & Safety', sub: '4.9/5 rating' },
+];
 
 export const ProductDetailPage = ({ productId, onNavigate }) => {
   const product = getProductById(productId) || PRODUCTS[0];
@@ -21,555 +61,314 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
   const [isMediaGridOpen, setIsMediaGridOpen] = useState(false);
   const [isEnquireOpen, setIsEnquireOpen] = useState(false);
   const [isDimensionsOpen, setIsDimensionsOpen] = useState(false);
-  const [isLockedZoom, setIsLockedZoom] = useState(false);
+  const [qty, setQty] = useState(1);
 
   const stageRef = useRef(null);
   const imgRef = useRef(null);
 
-  const images = product.images?.length > 0 
-    ? product.images.map(img => img.filePath) 
+  const images = product.images?.length > 0
+    ? product.images.map(img => img.filePath)
     : ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80'];
 
   const totalMedia = images.length;
   const inCart = isInCart(product._id?.$oid || product.id);
 
-  // Interactive Lens Zoom
+  /* ─── Zoom ─────────────────────────────────────────────── */
   const handleLensZoom = (e) => {
-    if (isLockedZoom || !stageRef.current || !imgRef.current) return;
+    if (!stageRef.current || !imgRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-
     imgRef.current.style.transformOrigin = `${x}% ${y}%`;
     imgRef.current.style.transform = 'scale(2.2)';
-    imgRef.current.style.cursor = 'zoom-in';
   };
-
   const handleLensLeave = () => {
-    if (isLockedZoom || !imgRef.current) return;
+    if (!imgRef.current) return;
     imgRef.current.style.transformOrigin = 'center center';
     imgRef.current.style.transform = 'scale(1)';
   };
 
-  const toggleLockedZoom = (e) => {
-    if (!stageRef.current || !imgRef.current) return;
-    const nextLocked = !isLockedZoom;
-    setIsLockedZoom(nextLocked);
-
-    if (nextLocked) {
-      const rect = stageRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      imgRef.current.style.transformOrigin = `${x}% ${y}%`;
-      imgRef.current.style.transform = 'scale(2.6)';
-      imgRef.current.style.cursor = 'zoom-out';
-    } else {
-      imgRef.current.style.transformOrigin = 'center center';
-      imgRef.current.style.transform = 'scale(1)';
-      imgRef.current.style.cursor = 'zoom-in';
-    }
-  };
-
-  // Keyboard navigation
+  /* ─── Keyboard nav ──────────────────────────────────────── */
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight') {
-        setCurrentMediaIdx((prev) => (prev + 1) % totalMedia);
-      } else if (e.key === 'ArrowLeft') {
-        setCurrentMediaIdx((prev) => (prev - 1 + totalMedia) % totalMedia);
-      } else if (e.key === 'Escape') {
-        if (isFullscreen) setIsFullscreen(false);
-        if (isMediaGridOpen) setIsMediaGridOpen(false);
-        if (isDimensionsOpen) setIsDimensionsOpen(false);
-        setIsLockedZoom(false);
-        if (imgRef.current) {
-          imgRef.current.style.transform = 'scale(1)';
-        }
-      }
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') setCurrentMediaIdx(p => (p + 1) % totalMedia);
+      else if (e.key === 'ArrowLeft') setCurrentMediaIdx(p => (p - 1 + totalMedia) % totalMedia);
+      else if (e.key === 'Escape') { setIsFullscreen(false); setIsMediaGridOpen(false); setIsDimensionsOpen(false); }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [totalMedia, isFullscreen, isMediaGridOpen, isDimensionsOpen]);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [totalMedia]);
 
-  const handlePrevMedia = () => {
-    setCurrentMediaIdx((prev) => (prev - 1 + totalMedia) % totalMedia);
-    setIsLockedZoom(false);
-    if (imgRef.current) imgRef.current.style.transform = 'scale(1)';
-  };
+  const handlePrev = () => setCurrentMediaIdx(p => (p - 1 + totalMedia) % totalMedia);
+  const handleNext = () => setCurrentMediaIdx(p => (p + 1) % totalMedia);
 
-  const handleNextMedia = () => {
-    setCurrentMediaIdx((prev) => (prev + 1) % totalMedia);
-    setIsLockedZoom(false);
-    if (imgRef.current) imgRef.current.style.transform = 'scale(1)';
-  };
+  /* ─── Breadcrumb ────────────────────────────────────────── */
+  const crumbGroup = product.groupName || 'Collections';
+
+  /* ─── Related products ──────────────────────────────────── */
+  const related = PRODUCTS.filter(p => (p.id || p._id?.$oid) !== (product.id || product._id?.$oid)).slice(0, 4);
+  const youMayAlsoLike = PRODUCTS.filter(p => (p.id || p._id?.$oid) !== (product.id || product._id?.$oid)).slice(4, 8);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #F0E8DD 0%, #F8F5EE 40%, #EAE0CD 100%)', color: '#0A0A0A', position: 'relative' }}>
-      
-      {/* Top Floating Header for PDP */}
-      <div 
-        className="kdh-pdp-sticky-header"
-        style={{
-          position: 'sticky',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '4.5rem',
-          background: 'rgba(240, 232, 221, 0.94)',
-          backdropFilter: 'blur(16px)',
-          zIndex: 80,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 2rem',
-          borderBottom: '1px solid rgba(45, 76, 58, 0.15)'
-        }}
-      >
-        <button 
-          onClick={() => onNavigate('/')} 
-          style={{ background: 'none', border: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer' }}
-          aria-label="Back to 3D Globe"
+    <div style={{ minHeight: '100vh', background: '#F8F5EF', color: '#0A0A0A' }}>
+
+      {/* ══ STICKY HEADER ══════════════════════════════════════ */}
+      <div className="kdh-pdp-sticky-header">
+        <button
+          onClick={() => onNavigate('/')}
+          style={{ background: 'none', border: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '5px', width: '24px', padding: 0 }}
+          aria-label="Back"
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '24px' }}>
-            <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '100%' }}></span>
-            <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '70%' }}></span>
-            <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '100%' }}></span>
-          </div>
+          <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '100%', borderRadius: '2px' }} />
+          <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '70%', borderRadius: '2px' }} />
+          <span style={{ display: 'block', height: '1.8px', background: 'var(--ekkayi-forest)', width: '100%', borderRadius: '2px' }} />
         </button>
-
         <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <img 
-            src="/ekkayi-nav-logo-green.svg" 
-            alt="EKKAYI" 
-            style={{ height: '38px', width: 'auto', cursor: 'pointer', objectFit: 'contain' }}
-            onClick={() => onNavigate('/')}
-          />
+          <img src="/ekkayi-nav-logo-green.svg" alt="EKKAYI" style={{ height: '36px', width: 'auto', cursor: 'pointer', objectFit: 'contain' }} onClick={() => onNavigate('/')} />
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <button 
-            onClick={() => onNavigate('/')}
-            style={{ background: 'none', border: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer', padding: '4px' }}
-            title="Close & Return to 3D Galaxy"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        <button onClick={() => onNavigate('/')} style={{ background: 'none', border: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer' }} title="Close">
+          <X size={22} />
+        </button>
       </div>
 
-      <div className="kdh-container" style={{ paddingTop: '2.5rem', paddingBottom: '6rem' }}>
-        <div className="kdh-pdp-responsive-grid">
-          {/* ================= LEFT COLUMN: MEDIA VIEWER & ZOOM ================= */}
-          <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div className="kdh-pdp-image-stage">
-              {/* Top-Left: 3x3 All Photos Modal Icon */}
-              <button
-                onClick={() => setIsMediaGridOpen(true)}
-                style={{
-                  position: 'absolute',
-                  top: '0.75rem',
-                  left: '0.75rem',
-                  background: 'rgba(240, 232, 221, 0.85)',
-                  border: '1px solid rgba(45, 76, 58, 0.2)',
-                  borderRadius: '6px',
-                  color: 'var(--ekkayi-forest)',
-                  cursor: 'pointer',
-                  padding: '6px',
-                  zIndex: 10
-                }}
-                title="All Photos"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-              </button>
+      <div className="kdh-container" style={{ paddingTop: '1.5rem', paddingBottom: '5rem' }}>
 
-              {/* Top-Right: Fullscreen Lightbox Icon */}
-              <button
-                onClick={() => setIsFullscreen(true)}
-                style={{
-                  position: 'absolute',
-                  top: '0.75rem',
-                  right: '0.75rem',
-                  background: 'rgba(240, 232, 221, 0.85)',
-                  border: '1px solid rgba(45, 76, 58, 0.2)',
-                  borderRadius: '6px',
-                  color: 'var(--ekkayi-forest)',
-                  cursor: 'pointer',
-                  padding: '6px',
-                  zIndex: 10
-                }}
-                title="Fullscreen"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-              </button>
+        {/* ══ BREADCRUMB ═══════════════════════════════════════ */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#7A807C', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          <button onClick={() => onNavigate('/')} style={{ background: 'none', border: 'none', color: '#7A807C', cursor: 'pointer', padding: 0, fontSize: '0.78rem' }}>Home</button>
+          <ChevronRight size={12} />
+          <button onClick={() => onNavigate('/collections')} style={{ background: 'none', border: 'none', color: '#7A807C', cursor: 'pointer', padding: 0, fontSize: '0.78rem' }}>{crumbGroup}</button>
+          <ChevronRight size={12} />
+          <span style={{ color: '#0A0A0A', fontWeight: 600 }}>{product.title}</span>
+        </div>
 
-              {/* Main Product Image with Interactive Lens Zoom */}
-              <div 
+        {/* ══ MAIN GRID ════════════════════════════════════════ */}
+        <div className="pdp-main-grid">
+
+          {/* ─── LEFT: Image Section ─────────────────────────── */}
+          <div className="pdp-image-section">
+            {/* Vertical thumbnail strip */}
+            {images.length > 1 && (
+              <div className="pdp-thumb-strip">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentMediaIdx(idx)}
+                    style={{
+                      width: '68px',
+                      height: '68px',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      border: currentMediaIdx === idx ? '2px solid var(--ekkayi-forest)' : '1.5px solid rgba(45,76,58,0.15)',
+                      padding: 0,
+                      background: '#fff',
+                      cursor: 'pointer',
+                      opacity: currentMediaIdx === idx ? 1 : 0.65,
+                      transition: 'all 0.2s ease',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img src={img} alt={`View ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Main image stage */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div
                 ref={stageRef}
                 onMouseMove={handleLensZoom}
                 onMouseLeave={handleLensLeave}
-                onClick={toggleLockedZoom}
                 style={{
+                  position: 'relative',
                   width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  background: '#FFFFFF',
+                  borderRadius: '14px',
+                  border: '1px solid rgba(45,76,58,0.12)',
+                  boxShadow: '0 12px 40px rgba(45,76,58,0.07)',
                   overflow: 'hidden',
-                  cursor: isLockedZoom ? 'zoom-out' : 'zoom-in'
+                  aspectRatio: '4/3',
+                  cursor: 'zoom-in',
                 }}
               >
                 <img
                   ref={imgRef}
                   src={images[currentMediaIdx]}
                   alt={product.title}
-                  style={{
-                    maxWidth: '90%',
-                    maxHeight: '90%',
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95))',
-                    transition: 'transform 0.22s ease-out',
-                    transformOrigin: 'center center'
-                  }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.22s ease-out', transformOrigin: 'center center' }}
                 />
-              </div>
 
-              {/* Minimal Navigation Arrows */}
-              <button
-                onClick={handlePrevMedia}
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  fontSize: '2.4rem',
-                  fontWeight: 200,
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  background: 'none',
-                  border: 'none',
-                  padding: '10px',
-                  cursor: 'pointer',
-                  zIndex: 10
-                }}
-                aria-label="Previous"
-              >
-                ‹
-              </button>
+                {/* All Photos */}
+                <button
+                  onClick={() => setIsMediaGridOpen(true)}
+                  style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(45,76,58,0.15)', borderRadius: '8px', color: 'var(--ekkayi-forest)', cursor: 'pointer', padding: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)' }}
+                  title="All Photos"
+                >
+                  <Grid size={16} />
+                </button>
 
-              <button
-                onClick={handleNextMedia}
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  fontSize: '2.4rem',
-                  fontWeight: 200,
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  background: 'none',
-                  border: 'none',
-                  padding: '10px',
-                  cursor: 'pointer',
-                  zIndex: 10
-                }}
-                aria-label="Next"
-              >
-                ›
-              </button>
+                {/* Fullscreen */}
+                <button
+                  onClick={() => setIsFullscreen(true)}
+                  style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(45,76,58,0.15)', borderRadius: '8px', color: 'var(--ekkayi-forest)', cursor: 'pointer', padding: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)' }}
+                  title="Fullscreen"
+                >
+                  <Maximize2 size={16} />
+                </button>
 
-              {/* Minimal Counter */}
-              <div 
-                style={{
-                  position: 'absolute',
-                  bottom: '0.5rem',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.15em',
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  textTransform: 'uppercase',
-                  background: 'rgba(0,0,0,0.6)',
-                  padding: '2px 10px',
-                  borderRadius: '12px'
-                }}
-              >
-                {currentMediaIdx + 1} / {totalMedia}
+                {/* Arrows */}
+                {totalMedia > 1 && (
+                  <>
+                    <button onClick={handlePrev} style={{ position: 'absolute', left: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(45,76,58,0.12)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--ekkayi-forest)' }}>
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button onClick={handleNext} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(45,76,58,0.12)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--ekkayi-forest)' }}>
+                      <ChevronRight size={18} />
+                    </button>
+                  </>
+                )}
+
+                {/* Dot indicators */}
+                {totalMedia > 1 && (
+                  <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '6px' }}>
+                    {images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentMediaIdx(idx)}
+                        style={{ width: currentMediaIdx === idx ? '20px' : '7px', height: '7px', borderRadius: '10px', background: currentMediaIdx === idx ? 'var(--ekkayi-forest)' : 'rgba(45,76,58,0.3)', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.3s ease' }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-
-            {/* Thumbnail Row */}
-            {images.length > 1 && (
-              <div 
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.6rem',
-                  marginTop: '1rem',
-                  flexWrap: 'wrap'
-                }}
-              >
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setCurrentMediaIdx(idx);
-                      setIsLockedZoom(false);
-                    }}
-                    style={{
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '6px',
-                      overflow: 'hidden',
-                      border: currentMediaIdx === idx ? '2px solid var(--gold)' : '1px solid rgba(255,255,255,0.15)',
-                      padding: 0,
-                      background: '#070708',
-                      cursor: 'pointer',
-                      opacity: currentMediaIdx === idx ? 1 : 0.6,
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <img src={img} alt={`Angle ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* ================= RIGHT COLUMN: PRODUCT INFO & ACTIONS ================= */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
-            
-            {/* Seating Capacity / Discount Badges */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* ─── RIGHT: Product Info ──────────────────────────── */}
+          <div className="pdp-info-section">
+
+            {/* Badges */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem' }}>
               {product.seatingCapacity && (
-                <span style={{
-                  background: 'rgba(172, 102, 68, 0.12)',
-                  border: '1px solid var(--terracotta)',
-                  color: 'var(--terracotta)',
-                  fontSize: '0.72rem',
-                  fontWeight: '700',
-                  letterSpacing: '0.12em',
-                  padding: '4px 12px',
-                  borderRadius: '20px',
-                  textTransform: 'uppercase'
-                }}>
+                <span style={{ background: 'rgba(172,102,68,0.1)', border: '1px solid var(--terracotta)', color: 'var(--terracotta)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', padding: '4px 12px', borderRadius: '20px', textTransform: 'uppercase' }}>
                   {product.seatingCapacity}
                 </span>
               )}
               {product.discount && (
-                <span style={{
-                  background: 'rgba(45, 76, 58, 0.12)',
-                  border: '1px solid var(--ekkayi-forest)',
-                  color: 'var(--ekkayi-forest)',
-                  fontSize: '0.72rem',
-                  fontWeight: '700',
-                  letterSpacing: '0.1em',
-                  padding: '4px 12px',
-                  borderRadius: '20px'
-                }}>
+                <span style={{ background: 'rgba(45,76,58,0.1)', border: '1px solid var(--ekkayi-forest)', color: 'var(--ekkayi-forest)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', padding: '4px 12px', borderRadius: '20px' }}>
                   {product.discount}
                 </span>
               )}
-              <span style={{
-                background: '#FFFFFF',
-                border: '1px solid rgba(45, 76, 58, 0.2)',
-                color: 'var(--ekkayi-forest)',
-                fontSize: '0.7rem',
-                letterSpacing: '0.1em',
-                padding: '4px 12px',
-                borderRadius: '20px',
-                textTransform: 'uppercase',
-                fontWeight: '600'
-              }}>
+              <span style={{ background: '#F0E8DD', border: '1px solid rgba(45,76,58,0.2)', color: 'var(--ekkayi-forest)', fontSize: '0.7rem', letterSpacing: '0.1em', padding: '4px 12px', borderRadius: '20px', textTransform: 'uppercase', fontWeight: 600 }}>
                 EKKAYI Artisanal
               </span>
             </div>
 
             {/* Title */}
-            <h1 
-              style={{
-                fontSize: 'clamp(2rem, 3.2vw, 2.6rem)',
-                fontWeight: 500,
-                letterSpacing: '0.03em',
-                color: 'var(--ekkayi-forest)',
-                fontFamily: 'var(--font-serif)',
-                lineHeight: 1.15
-              }}
-            >
+            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.7rem, 3vw, 2.4rem)', fontWeight: 500, color: '#0A0A0A', lineHeight: 1.2, marginBottom: '0.85rem', letterSpacing: '0.01em' }}>
               {product.title}
             </h1>
 
-            {/* Price Display in INR */}
+            {/* Price */}
             {product.priceFormatted && (
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <span style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--ekkayi-forest)', letterSpacing: '0.01em' }}>
                   {product.priceFormatted}
                 </span>
                 {product.originalPrice && (
-                  <span style={{ fontSize: '1.1rem', color: '#888E8A', textDecoration: 'line-through' }}>
+                  <span style={{ fontSize: '1rem', color: '#999', textDecoration: 'line-through', fontWeight: 500 }}>
                     {product.originalPrice}
                   </span>
                 )}
-                <span style={{ fontSize: '0.74rem', color: '#6A706C', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
-                  (Inclusive of all taxes &amp; Insurance)
+                <span style={{ fontSize: '0.7rem', color: '#888', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
+                  (Inclusive of all taxes & insurance)
                 </span>
               </div>
             )}
 
-            {/* Trust Assurance Bar */}
-            <div 
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-                gap: '0.6rem',
-                padding: '1rem',
-                background: '#FFFFFF',
-                border: '1px solid rgba(45, 76, 58, 0.15)',
-                boxShadow: '0 4px 15px rgba(45, 76, 58, 0.04)',
-                borderRadius: '10px',
-                fontSize: '0.74rem',
-                fontWeight: 600,
-                color: '#2C302D'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--ekkayi-forest)' }}>✓</span> Free Pan-India Delivery
+            {/* Trust Bar */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', padding: '0.85rem 1rem', background: '#FFFFFF', border: '1px solid rgba(45,76,58,0.12)', borderRadius: '10px', marginBottom: '1.1rem' }}>
+              {[
+                { icon: '🚚', label: 'Free Pan-India\nDelivery' },
+                { icon: '🛡️', label: '3-Year\nWarranty' },
+                { icon: '🔧', label: 'Free Expert\nAssembly' },
+              ].map((item) => (
+                <div key={item.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '1.35rem' }}>{item.icon}</span>
+                  <span style={{ fontSize: '0.68rem', fontWeight: 600, color: '#2C302D', lineHeight: 1.3, whiteSpace: 'pre-line' }}>{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Specs 3-col */}
+            <div className="pdp-specs-3col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', borderTop: '1px solid rgba(45,76,58,0.12)', borderBottom: '1px solid rgba(45,76,58,0.12)', padding: '1rem 0', marginBottom: '1.1rem' }}>
+              <div>
+                <div style={{ fontSize: '0.65rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '4px' }}>Dimensions</div>
+                <button onClick={() => setIsDimensionsOpen(true)} style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.82rem', color: 'var(--terracotta)', textDecoration: 'underline', cursor: 'pointer', textAlign: 'left', fontWeight: 600 }}>View Specs</button>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--ekkayi-forest)' }}>✓</span> 3-Year Warranty
+              <div>
+                <div style={{ fontSize: '0.65rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '4px' }}>Lead Time</div>
+                <div style={{ fontSize: '0.82rem', color: '#0A0A0A', fontWeight: 600 }}>{product.leadTime || '12 – 15 Days'}</div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--ekkayi-forest)' }}>✓</span> Free Expert Assembly
+              <div>
+                <div style={{ fontSize: '0.65rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '4px' }}>Primary Material</div>
+                <div style={{ fontSize: '0.82rem', color: '#0A0A0A', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.material?.split('&')[0]?.trim() || 'Solid Wood'}</div>
               </div>
             </div>
 
-            {/* 3-Column Specifications Row */}
-            <div 
-              className="pdp-specs-3col"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '1.25rem',
-                borderTop: '1px solid rgba(45, 76, 58, 0.15)',
-                borderBottom: '1px solid rgba(45, 76, 58, 0.15)',
-                padding: '1.1rem 0'
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
-                  Dimensions
-                </span>
-                <button 
-                  onClick={() => setIsDimensionsOpen(true)} 
-                  style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.85rem', color: 'var(--terracotta)', textDecoration: 'underline', cursor: 'pointer', textAlign: 'left', fontWeight: 600 }}
-                >
-                  View Specs
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
-                  Lead Time
-                </span>
-                <span style={{ fontSize: '0.88rem', color: '#1A1A1A', fontWeight: 600 }}>
-                  {product.leadTime || '5 - 7 Days'}
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#7A807C', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
-                  Primary Material
-                </span>
-                <span style={{ fontSize: '0.88rem', color: '#1A1A1A', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {product.material?.split('&')[0] || 'Solid Wood'}
-                </span>
-              </div>
-            </div>
-
-            {/* Narrative Block */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.92rem', color: '#3A403C', lineHeight: 1.75 }}>
-              <p style={{ color: '#1A1A1A', fontWeight: 500 }}>
-                {product.description?.split('\n\n')?.[0]}
-              </p>
+            {/* Description */}
+            <div style={{ fontSize: '0.9rem', color: '#3A403C', lineHeight: 1.75, marginBottom: '1.35rem' }}>
+              <p style={{ marginBottom: '0.6rem', fontWeight: 500, color: '#1A1A1A' }}>{product.description?.split('\n\n')?.[0]}</p>
               {product.description?.split('\n\n')?.[1] && (
-                <p>
-                  {product.description?.split('\n\n')?.[1]}
-                </p>
+                <p>{product.description?.split('\n\n')?.[1]}</p>
               )}
             </div>
 
-            {/* Bottom Action CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem' }} className="pdp-actions-col">
-              <div className="pdp-cta-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
-                <button 
-                  onClick={() => addToCart(product)}
-                  style={{
-                    background: 'var(--ekkayi-forest)',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    padding: '1rem 1.25rem',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    borderRadius: '6px',
-                    boxShadow: '0 6px 20px rgba(45, 76, 58, 0.3)',
-                    transition: 'all 0.2s ease'
-                  }}
-                  className="hover:opacity-90 hover:scale-[1.01]"
+            {/* Quantity + CTA */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {/* Qty + Add to Cart row */}
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'stretch' }}>
+                {/* Qty Selector */}
+                <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid rgba(45,76,58,0.25)', borderRadius: '8px', overflow: 'hidden', background: '#fff' }}>
+                  <button
+                    onClick={() => setQty(q => Math.max(1, q - 1))}
+                    style={{ width: '38px', height: '100%', border: 'none', background: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <span style={{ minWidth: '32px', textAlign: 'center', fontSize: '0.92rem', fontWeight: 700, color: '#0A0A0A' }}>{qty}</span>
+                  <button
+                    onClick={() => setQty(q => q + 1)}
+                    style={{ width: '38px', height: '100%', border: 'none', background: 'none', color: 'var(--ekkayi-forest)', cursor: 'pointer', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
+
+                {/* Add to Cart */}
+                <button
+                  onClick={() => { for (let i = 0; i < qty; i++) addToCart(product); }}
+                  style={{ flex: 1, background: 'var(--ekkayi-forest)', color: '#FFFFFF', border: 'none', padding: '0.9rem 1rem', fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', borderRadius: '8px', boxShadow: '0 6px 20px rgba(45,76,58,0.28)', transition: 'all 0.2s ease' }}
                 >
-                  {inCart ? 'Added to Cart ✓' : 'Add to Cart'}
+                  🛒 {inCart ? 'Added to Cart ✓' : 'Add to Cart'}
                 </button>
 
-                <button 
+                {/* Custom Request */}
+                <button
                   onClick={() => setIsEnquireOpen(true)}
-                  style={{
-                    background: '#FFFFFF',
-                    color: 'var(--ekkayi-forest)',
-                    border: '1.5px solid var(--ekkayi-forest)',
-                    padding: '1rem 1.25rem',
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    borderRadius: '6px',
-                    transition: 'all 0.2s ease'
-                  }}
-                  className="hover:bg-[#2D4C3A] hover:text-white"
+                  style={{ padding: '0.9rem 1rem', background: '#FFFFFF', color: 'var(--ekkayi-forest)', border: '1.5px solid var(--ekkayi-forest)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s ease', whiteSpace: 'nowrap' }}
                 >
-                  Custom Request
+                  Custom<br/>Request
                 </button>
               </div>
 
-              {/* WhatsApp Instant Order Button */}
+              {/* WhatsApp */}
               <a
                 href={`https://wa.me/+919820123456?text=${encodeURIComponent(`Hi EKKAYI, I want to inquire about ${product.title} (${product.priceFormatted || ''}).`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  background: '#25D366',
-                  color: '#FFFFFF',
-                  fontWeight: 700,
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  padding: '0.95rem',
-                  borderRadius: '6px',
-                  textDecoration: 'none',
-                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.25)'
-                }}
-                className="hover:opacity-90 transition-opacity"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#25D366', color: '#FFFFFF', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.9rem', borderRadius: '8px', textDecoration: 'none', boxShadow: '0 4px 15px rgba(37,211,102,0.25)', transition: 'opacity 0.2s' }}
               >
                 <span>💬</span> WhatsApp Instant Specialist Consultation
               </a>
@@ -578,62 +377,120 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
           </div>
         </div>
 
-        {/* Related Furniture Recommendations Grid */}
-        <div style={{ marginTop: '5.5rem', borderTop: '1px solid rgba(45, 76, 58, 0.15)', paddingTop: '4rem' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 500, color: 'var(--ekkayi-forest)', letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'var(--font-serif)' }}>
-              Complete the Sanctuary
-            </h2>
-            <p style={{ color: '#5A605C', fontSize: '0.85rem', letterSpacing: '0.08em', marginTop: '0.35rem' }}>
-              Handcrafted complementary furniture pieces by EKKAYI
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.75rem' }}>
-            {PRODUCTS.filter(p => (p.id || p._id?.$oid) !== (product.id || product._id?.$oid)).slice(0, 4).map((rel) => (
-              <div 
-                key={rel.id || rel._id?.$oid}
-                onClick={() => {
-                  onNavigate(`/productdetails/${rel.id || rel._id?.$oid}`);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(45, 76, 58, 0.15)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 25px rgba(45, 76, 58, 0.06)',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                className="hover:border-[#2D4C3A] hover:shadow-xl hover:scale-[1.02]"
-              >
-                <div style={{ aspectRatio: '4/3', background: '#F0E8DD', overflow: 'hidden' }}>
-                  <img 
-                    src={rel.images?.[0]?.filePath} 
-                    alt={rel.title} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                </div>
-                <div style={{ padding: '1.25rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>
-                    {rel.groupName}
-                  </div>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--ekkayi-forest)', margin: '0.35rem 0' }}>
-                    {rel.title}
-                  </h4>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0A0A0A' }}>
-                    {rel.priceFormatted || '₹' + rel.price?.toLocaleString()}
-                  </div>
-                </div>
+        {/* ══ FEATURE STRIP ════════════════════════════════════ */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: '#FFFFFF', border: '1px solid rgba(45,76,58,0.1)', borderRadius: '14px', padding: '1.5rem 2rem', marginTop: '2.5rem' }}>
+          {FEATURES.map((f) => (
+            <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+              <span style={{ color: 'var(--ekkayi-forest)', flexShrink: 0, marginTop: '2px' }}>{f.icon}</span>
+              <div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0A0A0A', marginBottom: '2px' }}>{f.title}</div>
+                <div style={{ fontSize: '0.72rem', color: '#7A807C' }}>{f.sub}</div>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+
+        {/* ══ COMPLETE THE SANCTUARY ═══════════════════════════ */}
+        {related.length > 0 && (
+          <div style={{ marginTop: '4rem' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#0A0A0A', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-sans)' }}>
+                COMPLETE THE SANCTUARY
+              </h2>
+              <p style={{ color: '#7A807C', fontSize: '0.8rem', marginTop: '4px' }}>Handcrafted complementary furniture pieces by EKKAYI</p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: '1.25rem' }}>
+              {related.map(rel => (
+                <div
+                  key={rel.id || rel._id?.$oid}
+                  onClick={() => { onNavigate(`/productdetails/${rel.id || rel._id?.$oid}`); window.scrollTo({ top: 0 }); }}
+                  style={{ background: '#FFFFFF', border: '1px solid rgba(45,76,58,0.1)', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.25s ease' }}
+                  className="hover:border-[#2D4C3A] hover:shadow-lg hover:scale-[1.02]"
+                >
+                  <div style={{ aspectRatio: '4/3', background: '#F0E8DD', overflow: 'hidden' }}>
+                    <img src={rel.images?.[0]?.filePath} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ padding: '0.85rem' }}>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, marginBottom: '4px' }}>{rel.groupName}</div>
+                    <h4 style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0A0A0A', marginBottom: '6px', lineHeight: 1.3 }}>{rel.title}</h4>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ekkayi-forest)' }}>{rel.priceFormatted || '₹' + rel.price?.toLocaleString()}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); addToCart(rel); }}
+                        style={{ background: 'none', border: '1px solid rgba(45,76,58,0.25)', borderRadius: '6px', color: 'var(--ekkayi-forest)', cursor: 'pointer', padding: '4px 8px', fontSize: '0.7rem', fontWeight: 600 }}
+                      >
+                        🛒
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+        )}
+
+        {/* ══ YOU MAY ALSO LIKE ════════════════════════════════ */}
+        {youMayAlsoLike.length > 0 && (
+          <div style={{ marginTop: '3.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#0A0A0A', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-sans)' }}>
+                YOU MAY ALSO LIKE
+              </h2>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button style={{ width: '34px', height: '34px', borderRadius: '50%', border: '1px solid rgba(45,76,58,0.2)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--ekkayi-forest)' }}>
+                  <ChevronLeft size={16} />
+                </button>
+                <button style={{ width: '34px', height: '34px', borderRadius: '50%', border: '1px solid rgba(45,76,58,0.2)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--ekkayi-forest)' }}>
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: '1.25rem' }}>
+              {youMayAlsoLike.map(rel => (
+                <div
+                  key={rel.id || rel._id?.$oid}
+                  onClick={() => { onNavigate(`/productdetails/${rel.id || rel._id?.$oid}`); window.scrollTo({ top: 0 }); }}
+                  style={{ background: '#FFFFFF', border: '1px solid rgba(45,76,58,0.1)', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.25s ease' }}
+                  className="hover:border-[#2D4C3A] hover:shadow-lg hover:scale-[1.02]"
+                >
+                  <div style={{ aspectRatio: '4/3', background: '#F0E8DD', overflow: 'hidden' }}>
+                    <img src={rel.images?.[0]?.filePath} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ padding: '0.85rem' }}>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, marginBottom: '4px' }}>{rel.groupName}</div>
+                    <h4 style={{ fontSize: '0.88rem', fontWeight: 600, color: '#0A0A0A', marginBottom: '6px', lineHeight: 1.3 }}>{rel.title}</h4>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ekkayi-forest)' }}>{rel.priceFormatted || '₹' + rel.price?.toLocaleString()}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); addToCart(rel); }}
+                        style={{ background: 'none', border: '1px solid rgba(45,76,58,0.25)', borderRadius: '6px', color: 'var(--ekkayi-forest)', cursor: 'pointer', padding: '4px 8px', fontSize: '0.7rem', fontWeight: 600 }}
+                      >
+                        🛒
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ══ TRUST BADGES ═════════════════════════════════════ */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', background: '#FFFFFF', border: '1px solid rgba(45,76,58,0.1)', borderRadius: '14px', padding: '1.5rem 2rem', marginTop: '3.5rem' }}>
+          {TRUST_BADGES.map((b) => (
+            <div key={b.title} style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <span style={{ fontSize: '1.6rem', flexShrink: 0 }}>{b.icon}</span>
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0A0A0A', marginBottom: '2px' }}>{b.title}</div>
+                <div style={{ fontSize: '0.7rem', color: '#7A807C' }}>{b.sub}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* 3x3 All Media Grid Modal */}
-      <MediaGridModal 
+      {/* ══ ALL MEDIA GRID MODAL ═════════════════════════════════ */}
+      <MediaGridModal
         isOpen={isMediaGridOpen}
         onClose={() => setIsMediaGridOpen(false)}
         images={product.images || []}
@@ -641,80 +498,40 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
         onSelectMedia={(idx) => setCurrentMediaIdx(idx)}
       />
 
-      {/* Fullscreen Lightbox */}
+      {/* ══ FULLSCREEN ═══════════════════════════════════════════ */}
       {isFullscreen && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.98)',
-            zIndex: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <button 
-            onClick={() => setIsFullscreen(false)}
-            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', fontSize: '1.5rem', color: 'rgba(255,255,255,0.7)', background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            ✕
-          </button>
-          <button 
-            onClick={handlePrevMedia}
-            style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', padding: '1.5rem', cursor: 'pointer' }}
-          >
-            ‹
-          </button>
-          <button 
-            onClick={handleNextMedia}
-            style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', padding: '1.5rem', cursor: 'pointer' }}
-          >
-            ›
-          </button>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.97)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button onClick={() => setIsFullscreen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', fontSize: '1.5rem', color: 'rgba(255,255,255,0.7)', background: 'none', border: 'none', cursor: 'pointer' }}>✕</button>
+          <button onClick={handlePrev} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', padding: '1rem' }}>‹</button>
+          <button onClick={handleNext} style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', padding: '1rem' }}>›</button>
           <img src={images[currentMediaIdx]} alt={product.title} style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }} />
         </div>
       )}
 
-      {/* Dimensions Modal */}
+      {/* ══ DIMENSIONS MODAL ═════════════════════════════════════ */}
       {isDimensionsOpen && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.88)',
-            backdropFilter: 'blur(12px)',
-            zIndex: 90,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '2rem'
-          }}
-        >
-          <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', maxWidth: '550px', width: '100%', padding: '2rem', textAlign: 'center' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(12px)', zIndex: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+          <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', maxWidth: '550px', width: '100%', padding: '2rem', textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Architectural Dimensions</h3>
-              <button onClick={() => setIsDimensionsOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+              <h3 style={{ fontSize: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff' }}>Architectural Dimensions</h3>
+              <button onClick={() => setIsDimensionsOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
             </div>
-            <p style={{ fontSize: '1.2rem', fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>{product.title}</p>
-            <p style={{ fontSize: '0.95rem', color: 'var(--gold)', marginBottom: '1.5rem' }}>
-              {product.dimensions || '22" Diameter • 34" Height • Weight: 120 kg'}
-            </p>
+            <p style={{ fontSize: '1.15rem', fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>{product.title}</p>
+            <p style={{ fontSize: '0.95rem', color: 'var(--gold)', marginBottom: '1.5rem' }}>{product.dimensions || '22" Diameter • 34" Height • Weight: 120 kg'}</p>
             <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>
-              Precision CNC carved from a single natural monolithic quarry block. Custom waste fitting included. Suitable for deck-mount or wall-mount tapware.
+              Precision crafted from premium materials. Custom sizes available on request.
             </p>
           </div>
         </div>
       )}
 
-      {/* Enquire Modal */}
+      {/* ══ ENQUIRE MODAL ════════════════════════════════════════ */}
       <EnquireModal
         isOpen={isEnquireOpen}
         onClose={() => setIsEnquireOpen(false)}
         productTitle={product.title}
         variant={product.groupName || 'Artisanal Furniture'}
       />
-
     </div>
   );
 };
